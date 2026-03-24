@@ -1,0 +1,9 @@
+site_name: Материалы олимп.группы по физике СУНЦ МГУ
+theme:
+  name: material
+  language: ru
+  palette:
+    primary: indigo
+
+nav:
+  - Главная: index.md
