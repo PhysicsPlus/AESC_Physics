@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Электростатика — Формулы и выводы</title>
+  <style>
+    :root { --bg: #fafafa; --text: #1a1a1a; --accent: #0056b3; --box: #ffffff; --comment-bg: #f0f4f8; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.65; color: var(--text); background: var(--bg); margin: 0; padding: 20px; }
+    .container { max-width: 850px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 0.3em; font-size: 1.8rem; }
+    .subtitle { text-align: center; color: #555; margin-bottom: 2em; font-size: 1rem; }
+    h2 { border-bottom: 2px solid #ddd; padding-bottom: 0.3em; margin-top: 2.2em; font-size: 1.4rem; }
+    h3 { color: #444; margin-top: 1.2em; font-weight: 500; font-size: 1.1rem; }
+    .formula-box { background: var(--box); border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin: 16px 0; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    ul { margin: 0; padding-left: 1.2em; }
+    li { margin-bottom: 10px; }
+    .comment { background: var(--comment-bg); border-left: 4px solid var(--accent); padding: 16px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+    .comment strong { color: var(--accent); }
+    @media (max-width: 600px) { body { padding: 12px; } h1 { font-size: 1.5rem; } }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        macros: {
+          Ez: '{\\varepsilon_0}',
+          dd: '{\\mathrm{d}}',
+          vc: '{\\boldsymbol}',
+          divg: '{\\nabla\\!\\cdot}',
+          pdv: ['{\\frac{\\partial #1}{\\partial #2}}', 2],
+          tg: '{\\tan}',
+          qty: ['\\left(#1\\right)', 1],
+          sgn: '{\\operatorname{sgn}}'
+        },
+        packages: {'[+]': ['ams', 'physics']}
+      },
+      startup: { typeset: true }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Надо уметь выводить — Электростатика</h1>
+    <p class="subtitle"><strong>Электростатика и электрический ток</strong><br>СУНЦ МГУ · Весна 2026 · П. А. Крюков</p>
+
+    <!-- Раздел 1 -->
+    <h2>1. Поле заряженного отрезка, нити и полосы</h2>
+    <h3>— через углы видимости из точки наблюдения</h3>
+    <div class="formula-box">
+      <strong>Формулы:</strong>
+      <ul>
+        <li>отрезок, ⟂ к нему: $\displaystyle E_\perp = \frac{\lambda}{4\pi\Ez\,h}\bigl(\sin\alpha_2-\sin\alpha_1\bigr)$</li>
+        <li>бесконечная нить: $\displaystyle E(r) = \frac{\lambda}{2\pi\Ez\,r}$</li>
+        <li>полоса, ⟂: $\displaystyle E_n = \frac{\sigma(\beta_2-\beta_1)}{2\pi\Ez}$</li>
+        <li>полоса, ‖: $\displaystyle E_\tau = \frac{\sigma}{2\pi\Ez}\,\ln\frac{\cos\beta_1}{\cos\beta_2}$</li>
+      </ul>
+    </div>
+    <div class="comment">
+      <p><strong>Комментарий:</strong> Стандартный подход: разбиваем источник (отрезок) на бесконечно малые элементы $\dd q=\lambda\,\dd x$ и считаем вклад каждого: $\dd E_{\perp}=\frac{\lambda\,\dd x}{4\pi\Ez r^2}\cdot \frac{h}{r}$. Поскольку $r^{2} = x^{2}+h^{2}$, прямое интегрирование по $x$ формально возможно, но приводит к громоздким алгебраическим выражениям.</p>
+      <p>Для упрощения интегрирования целесообразно перейти от координаты $x$ к угловой переменной $\alpha$ - углу между перпендикуляром $h$ и радиус-вектором $\vc r$ элемента $\dd x$. Из геометрии следует: $x=h\tg\alpha$, откуда $\dd x=h\frac{\dd\alpha}{\cos^2\alpha}$ и $r=\frac{h}{\cos\alpha}$. Подстановка в выражение для нормальной компоненты $\dd E_\perp = \frac{\lambda\,\dd x}{4\pi\Ez r^2}\cos\alpha$ приводит к сокращению тригонометрических множителей: $\dd E_\perp = \frac{\lambda}{4\pi\Ez h}\cos\alpha\,\dd\alpha$. Интегрирование становится элементарным. Дальше всё определяется только пределами по углу. Для отрезка $\alpha\in[\alpha_1,\alpha_2]$ — это углы на концы из точки наблюдения. Для бесконечной нити $\alpha\in[-\pi/2,\pi/2]$, и $\sin\alpha_2-\sin\alpha_1=2$ → отсюда «двойка» в знаменателе формулы $E=\frac{\lambda}{2\pi\Ez r}$.</p>
+      <p>Полосу ширины $b$ разобьём на бесконечно узкие параллельные нити с линейной плотностью $\dd\lambda = \sigma\,\dd y$. Поле каждой нити уже известно: $\dd E = \frac{\dd\lambda}{2\pi\Ez r}$. Вводя угол $\beta$ между перпендикуляром к полосе и направлением на нить ($y = h\tg\beta$, $\dd y = h\frac{\dd\beta}{\cos^2\beta}$, $r = \frac{h}{\cos\beta}$), получаем вклады в две компоненты: нормальная $\dd E_n \propto \dd\beta$ интегрируется в линейную разность углов $(\beta_2-\beta_1)$, а тангенциальная $\dd E_\tau \propto \tg\beta\,\dd\beta$ даёт логарифм $\ln\frac{\cos\beta_1}{\cos\beta_2}$.</p>
+    </div>
+
+    <!-- Раздел 2 -->
+    <h2>2. Поле площадки и диска. Сила на полусферу</h2>
+    <h3>— через телесный угол $\Omega$, под которым видна поверхность</h3>
+    <div class="formula-box">
+      <strong>Формулы:</strong>
+      <ul>
+        <li>площадка: $\displaystyle E_n = \frac{\sigma}{4\pi\Ez}\,\Omega$</li>
+        <li>диск, по оси: $\displaystyle E(x) = \frac{\sigma}{2\Ez}\!\left(1-\frac{x}{\sqrt{x^2+R^2}}\right)$</li>
+        <li>эл. сила: $\displaystyle \dd F_n = \sigma\,\dd\Phi$</li>
+        <li>центр. $q$ + полусфера: $\displaystyle F = q\,E_{\text{псф}} = \frac{q\,\sigma}{4\Ez}$</li>
+      </ul>
+    </div>
+    <div class="comment">
+      <p><strong>Комментарий:</strong> Опорный факт: вклад малой площадки $\dd S$ заряженной поверхности в нормальную к ней компоненту поля в точке наблюдения равен $\dd E_n = \frac{\sigma\,\dd\Omega}{4\pi\Ez}$, где $\dd\Omega = \frac{\dd S\cos\theta}{r^2}$ — телесный угол, под которым эта площадка видна. Замечательно, что от расстояния $r$ зависимость исчезает — остаётся одна геометрия: «насколько большой выглядит источник».</p>
+      <p>Для диска радиуса $R$, рассматриваемого с точки на его оси на расстоянии $x$, полный телесный угол равен $\Omega = 2\pi\,\qty(1-\cos\theta_R)$, где $\theta_R$ — половинный угол раствора конуса. Подставив $\cos\theta_R=\frac{x}{\sqrt{x^2+R^2}}$ из прямоугольного треугольника, сразу получаем компактную формулу для $E(x)$ — без явного интегрирования по кольцам. В пределе $R\to\infty$ получаем бесконечную плоскость $E=\frac{\sigma}{2\Ez}$ (как и должно быть).</p>
+      <p>Этот же приём даёт изящный вывод силы, действующей на заряженную полусферу со стороны точечного заряда $q$, помещённого в её центр. Применяем «двойственность»: $\dd F_n = \sigma\,\dd S\cdot E_q = \sigma\,\dd\Phi$, где $\dd\Phi$ — поток поля заряда $q$ через площадку $\dd S$. Полный поток через полусферу равен половине от полного потока $\frac{q}{\Ez}$, то есть $\frac{q}{2\Ez}$. Отсюда $F=\frac{q\sigma}{4\Ez}$ — и ответ не зависит от радиуса полусферы. Это та же логика, что и в теореме Гаусса, только применённая «наоборот».</p>
+    </div>
+
+    <!-- Раздел 3 -->
+    <h2>3. Теорема Гаусса. Поле пластины и шара</h2>
+    <h3>— дифференциальная форма; объёмно заряженные тела</h3>
+    <div class="formula-box">
+      <strong>Формулы:</strong>
+      <ul>
+        <li>дифф. форма: $\displaystyle \divg \vc{E} = \pdv{E_x}{x}+\pdv{E_y}{y}+\pdv{E_z}{z} = \frac{\rho(\vc{r})}{\Ez}$</li>
+        <li>пластина $2d$: $\displaystyle E_x(x) = \begin{cases}\frac{\rho\,x}{\Ez},& |x|\lt d\\[4pt] \frac{\rho\,d}{\Ez}\,\operatorname{sgn}(x),& |x|\geqslant d\end{cases}$</li>
+        <li>шар радиуса $R$: $\displaystyle \vc{E}(\vc r) = \begin{cases}\frac{\rho}{3\Ez}\,\vc r,& r\lt R\\[6pt] \frac{\rho R^3}{3\Ez\,r^3}\,\vc r,& r\geqslant R\end{cases}$</li>
+      </ul>
+    </div>
+    <div class="comment">
+      <p><strong>Комментарий:</strong> Исходим из интегральной формы $\oint\vc E\!\cdot\dd\vc S = \frac{Q_{\text{вн}}}{\Ez}$: поток электрического поля через замкнутую поверхность равен заключённому внутри заряду, делённому на $\Ez$. От неё переходим к дифференциальной форме предельным сжатием объёма в точку: применяем теорему о дивергенции $\oint\vc E\!\cdot\dd\vc S = \int\divg\vc E\,\dd V$ и получаем локальный закон — он связывает плотность заряда и поле в одной и той же точке, без какой-либо «удалённой» поверхности.</p>
+      <p>Практическая сила теоремы Гаусса — в задачах с симметрией, где из соображений симметрии заранее известно, в какую сторону направлено $\vc E$ и от чего оно зависит. Тогда поверхность выбирается «под симметрию», и интеграл $\oint\vc E\!\cdot\dd\vc S$ превращается в произведение $E\cdot S$.</p>
+      <p>Плоская пластина толщины $2d$, заряженная объёмно с плотностью $\rho$: берём «таблетку» площадью $S$, расположенную симметрично относительно середины. На боковой поверхности $\vc E\parallel$ поверхности — потока нет. На двух торцах поток одинаков. Внутри пластины захвачено $Q_{\text{вн}}=\rho\cdot S\cdot 2x$ → $2ES=\frac{2\rho x S}{\Ez}$ → линейный рост. Снаружи $Q_{\text{вн}}$ уже не растёт → поле постоянно и равно $\frac{\rho d}{\Ez}$.</p>
+      <p>Однородно заряженный шар радиуса $R$: гауссова поверхность — сфера радиуса $r$, концентрическая с шаром. Из сферической симметрии $\vc E=E(r)\hat{\vc r}$. Внутри захвачено $Q(r)=\rho\cdot\frac{4}{3}\pi r^3$ → $4\pi r^2 E = \frac{Q(r)}{\Ez}$ → поле растёт линейно по радиусу, $\vc E\propto\vc r$. Снаружи весь заряд уже внутри сферы — поле тождественно совпадает с полем точечного заряда $Q$, помещённого в центр. Это частный случай общего правила: сферически-симметричное распределение действует снаружи как точка.</p>
+    </div>
+
+    <!-- Раздел 4 -->
+    <h2>4. Потенциал точечного заряда и шара</h2>
+    <h3>— снаружи кулоновский, внутри однородного шара — парабола</h3>
+    <div class="formula-box">
+      <strong>Формулы:</strong>
+      <ul>
+        <li>точечный заряд: $\displaystyle \varphi(r) = \int_r^{\infty}\!\frac{Q\,\dd r'}{4\pi\Ez\,r'^{\,2}} = \frac{Q}{4\pi\Ez\,r}$</li>
+        <li>однородный шар: $\displaystyle \varphi(r) = \begin{cases}\frac{\rho R^2}{2\Ez}-\frac{\rho r^2}{6\Ez},& r\lt R\\[6pt] \frac{\rho R^3}{3\Ez\,r},& r\geqslant R\end{cases}$</li>
+      </ul>
+    </div>
+    <div class="comment">
+      <p><strong>Комментарий:</strong> Стандартное соглашение: потенциал на бесконечности равен нулю. Тогда $\varphi(r) = \displaystyle\int_r^{\infty}\!E(r')\,\dd r'$ — это работа поля по перемещению единичного положительного заряда из точки $r$ на бесконечность. Поле электростатики потенциально, поэтому путь интегрирования не важен — выбираем самый удобный, обычно радиальный.</p>
+      <p>Для точечного заряда $E=\frac{Q}{4\pi\Ez r^2}$; первообразная от $\frac{1}{r'^{\,2}}$ равна $-\frac{1}{r'}$, что после подстановки пределов сразу даёт классическую кулоновскую формулу $\varphi=\frac{Q}{4\pi\Ez r}$.</p>
+      <p>Для точки внутри однородно заряженного шара ключевая тонкость в том, что выражение для $E$ меняется при пересечении границы $r=R$: внутри $E\propto r$, снаружи $E\propto \frac{1}{r^2}$. Поэтому интеграл нужно разбить на две части: $\displaystyle\int_r^{R}\!E_{\text{внутр}}(r')\,\dd r' + \int_R^{\infty}\!E_{\text{снаружи}}(r')\,\dd r'$. Первая часть даёт параболический вклад $\propto r^2$ (с минусом — поле направлено наружу, и при движении к бесконечности проходим участок «по полю»), вторая — гиперболический $\propto \frac{1}{r}$.</p>
+      <p>Стыковка двух кусков в точке $r=R$ автоматически даёт непрерывность и потенциала, и его производной (поля). В центре шара $\varphi$ принимает максимальное значение $\frac{\rho R^2}{2\Ez}$ — это «потолок» параболы, та работа, которую совершит поле, выталкивая единичный заряд из центра наружу.</p>
+    </div>
+
+    <p style="text-align:center; color:#777; margin-top:3em; font-size:0.9em;">
+      комментарии · «надо уметь выводить» · электростатика и электрический ток
+    </p>
+  </div>
+</body>
+</html>
