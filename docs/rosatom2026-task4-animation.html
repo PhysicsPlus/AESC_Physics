@@ -108,7 +108,7 @@
   <h2>стержень и полушар</h2>
   <svg id="scene" viewBox="0 0 840 600" aria-label="Стержень на полушаре"></svg>
   <div class="status" id="status"></div>
-  <p class="note" style="font-size:14px;color:#555;margin-top:0">Стрелки у полушара и в точке касания нарисованы в одном масштабе, стрелки у конца стержня — в другом, более мелком.</p>
+  <p class="note" style="font-size:14px;color:#555;margin-top:0">Все скорости нарисованы в одном масштабе, ускорения — в своём. Слишком длинные стрелки укорачиваются, об этом сообщает строка выше.</p>
 </div>
 
 <div class="card">
@@ -249,10 +249,10 @@
   function drawDyn() {
     const a = alphaAt(t), x = x0 - P.v * t, s = Math.sin(a), c = Math.cos(a);
     const M = [-x, 0], Kd = x * c, K = [-Kd * c, Kd * s], E = [-P.l * c, P.l * s], k = kin(a);
-    const vs = 0.3 * P.l / (P.v / P.R * f(A45) * P.l);         // масштаб скоростей: v₁(45°) → 0,3 l
     const as = 0.2 * P.l / (Math.sqrt(2.5) * (P.v / P.R) ** 2 * P.l);    // масштаб ускорений: a(45°) → 0,2 l
     const maxL = 0.45 * P.l;
-    const cs = 0.9 * P.R / P.v;                                 // масштаб скоростей у полушара: v → 0,9 R
+    // все скорости --- в одном масштабе: v → 0,5 R; тогда v₁(45°) → 0,35 l при любых v, R, l
+    const cs = 0.5 * P.R / P.v;
     gDyn.innerHTML = '';
     // полушар
     const r = P.R * V.sc;
@@ -301,7 +301,7 @@
       const tx = X(E[0] + vec[0] * k0) + 14 * ux - side * uy, ty = Y(E[1] + vec[1] * k0) - 14 * uy - side * ux + 5;
       label(gDyn, tx, ty, txt, { fill: col, 'font-size': 16 });
     };
-    const v1 = [k.v1 * vs * vdir[0], k.v1 * vs * vdir[1]];
+    const v1 = [k.v1 * cs * vdir[0], k.v1 * cs * vdir[1]];
     const cutV = arrow(gDyn, E[0], E[1], v1[0], v1[1], BLUE, 2.4, 'hb', maxL);
     tipLabel(v1, 'v<tspan font-size="11" dy="4" font-style="normal">1</tspan>', BLUE);
     let cutA = false;
