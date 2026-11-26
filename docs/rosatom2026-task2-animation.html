@@ -3,317 +3,444 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Гантель на нити</title>
+<title>Гантель на длинной нити</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* VOICE: a careful physics-journal figure page — calm, exact, explanatory.
-   IDEA: a textbook plate: one large live drawing of the dumbbell, then two measured graphs.
-   PICTURE: the swinging dumbbell on its string with trails and velocity arrows, drawn to scale.
-   COLOUR and TYPE: white paper, ink, ultramarine accent; series blue/orange/aqua; Spectral + Inter.
-   LAYOUT: title, then drawing left / controls right, then two graphs, then the explanation. */
-:root{color-scheme:light dark;
-  --bg:light-dark(#ffffff,#0d0e18);--ink:light-dark(#14110f,#ecebf2);--muted:light-dark(#5d5a66,#a4a2b3);
-  --line:light-dark(#dcdbe3,#2c2e40);--panel:light-dark(#f5f5f8,#151726);--accent:light-dark(#1d2bd8,#8d96ff);
-  --sA:light-dark(#257de0,#338ced);--sB:light-dark(#f47230,#e76624);--sC:light-dark(#00b894,#00a888);
-  --grid:light-dark(#ececf1,#23253a)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
-h1,h2{font-family:Spectral,Georgia,serif;font-weight:500;text-wrap:balance}
-h1{font-size:clamp(28px,4vw,44px);line-height:1.08;margin:0 0 10px}
-h2{font-size:26px;line-height:1.15;margin:0 0 8px}
-.band{padding:clamp(24px,3.5vw,52px) max(5vw,16px);max-width:1240px;margin:0 auto}
-.lede{color:var(--muted);max-width:70ch;margin:0}
-.lede b{color:var(--ink);font-weight:600}
-.main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
-.fig{position:relative;min-height:340px}.fig>svg,.fig>canvas{position:absolute;inset:0;width:100%;height:100%}
-#stage{height:min(62vh,560px);border:1px solid var(--line);border-radius:6px;background:var(--bg)}
-.note{font-size:13px;color:var(--muted);margin-top:6px}
-.ctl{display:grid;gap:14px}
-.ctl label{display:grid;gap:4px;font-size:14px}
-.ctl .row{display:flex;justify-content:space-between;gap:8px}
-.ctl output{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
-input[type=range]{width:100%;height:28px;accent-color:var(--accent)}
-.btns{display:flex;flex-wrap:wrap;gap:8px}
-button{font:500 15px Inter,sans-serif;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
-button.ghost{background:transparent;color:var(--accent)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-select{font:15px Inter,sans-serif;min-height:44px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:0 8px}
-.check{display:flex!important;grid-template-columns:none;align-items:center;gap:8px}
-.check input{width:20px;height:20px;accent-color:var(--accent)}
-table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
-th,td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}
-th{font-weight:500;color:var(--muted)}
-.sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
-.live{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
-.live b{color:var(--ink);font-weight:600}
-.panel{background:var(--panel);border-radius:8px;padding:14px 16px}
-.charts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
-.chart{height:340px}
-.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--ink);margin:4px 0 6px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{display:inline-block;width:18px;height:2px;background:currentColor}
-.legend i.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)}
-.tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:13px;line-height:1.4;box-shadow:0 2px 10px rgba(0,0,0,.12);display:none;white-space:nowrap;z-index:2}
-.text{max-width:72ch;font-family:Spectral,Georgia,serif;font-size:17.5px;line-height:1.6}
-.text p{margin:0 0 12px}
-.f{font-family:Inter,sans-serif;font-size:15px;background:var(--panel);padding:10px 14px;border-radius:6px;margin:8px 0 14px;font-variant-numeric:tabular-nums}
-@media(max-width:860px){.main,.charts{grid-template-columns:minmax(0,1fr)}#stage{height:420px}}
-@media(max-width:600px){table{font-size:13px}#stage{height:360px}}
+  :root {
+    --ink: #111; --gray: #8a8a8a; --light: #d9d9d9;
+    --blue: rgb(0, 84, 166); --paper: #fbfaf7; --panel: #fff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "STIX Two Text", "Times New Roman", Georgia, serif;
+    font-size: 17px; line-height: 1.45;
+  }
+  main { max-width: 900px; margin: 0 auto; padding: 18px 16px 40px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 26px; font-weight: 600; margin: 6px 0; }
+  .sub { color: #555; margin: 0 0 12px; }
+  button {
+    font: inherit; font-size: 15px; border: 1px solid var(--ink); background: var(--ink);
+    color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--ink); }
+  .controls {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px 22px; background: var(--panel); border: 1px solid var(--light);
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0 14px;
+  }
+  .controls label { font-size: 14px; color: #333; display: block; }
+  input[type=range] { width: 100%; accent-color: var(--ink); }
+  .presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .presets button { font-size: 13px; padding: 3px 9px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14px; margin: 4px 0 10px; }
+  .legend > span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid; }
+  .card { background: var(--panel); border: 1px solid var(--light); border-radius: 8px; padding: 10px 12px 6px; margin-bottom: 14px; }
+  .card h2 { font-size: 15px; font-weight: 400; color: #666; margin: 2px 0 4px; }
+  svg { width: 100%; height: auto; display: block; }
+  .math { font-style: italic; }
+  .status { font-size: 15px; min-height: 3em; margin: 2px 0 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 4px 8px; border-bottom: 1px solid var(--light); text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-weight: 400; color: #666; }
+  p.note { margin: 8px 0; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 14px; }
+  @media (max-width: 700px) { .two { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
-
-<section class="band">
-  <h1>Чем длиннее нить, тем ближе скорости к&nbsp;пределу √(4gl/3) и 2√(4gl/3)</h1>
-  <p class="lede">Олимпиада «Росатом», 11 класс, 2026, задача 2. Здесь уравнения движения решаются <b>точно</b>, при любой длине нити L, а не в приближении «точка C скользит по горизонтали». Меняйте L и длину гантели l. Скорости в нижнем положении зависят только от отношения L/l, а при L/l → ∞ стремятся к ответу задачи.</p>
-</section>
-
-<section class="band main" style="padding-top:0">
+<main>
+<header>
+  <h1>Гантель на длинной нити</h1>
   <div>
-    <div class="fig" id="stage"><canvas id="cv" aria-label="Анимация гантели на нити"></canvas></div>
-    <p class="note">Стрелки — скорости грузов A, B и точки C. Тонкие линии — их траектории. Пунктир — горизонталь через начальное положение C.</p>
+    <button id="play">Пуск</button>
+    <button id="restart" class="ghost">Сначала</button>
   </div>
-  <div class="ctl">
-    <label for="L"><span class="row"><span>Длина нити L</span><output id="Lo"></output></span>
-      <input type="range" id="L" min="-1" max="3" step="0.01" value="1"></label>
-    <label for="l"><span class="row"><span>Длина гантели l (стержень ABC)</span><output id="lo"></output></span>
-      <input type="range" id="l" min="0.1" max="3" step="0.05" value="1"></label>
-    <label for="k"><span class="row"><span>Положение груза B: CB/CA</span><output id="ko"></output></span>
-      <input type="range" id="k" min="0.05" max="0.8" step="any" value="0.333333"></label>
-    <div class="row" style="align-items:center;flex-wrap:wrap">
-      <label for="slow" style="display:flex;gap:8px;align-items:center">Скорость показа
-        <select id="slow"><option value="1">1×</option><option value="0.5">0,5×</option><option value="0.25" selected>0,25×</option><option value="0.1">0,1×</option></select></label>
-      <label class="check"><input type="checkbox" id="stop" checked> пауза в нижнем положении</label>
-    </div>
-    <div class="btns"><button id="play">Пуск</button><button class="ghost" id="reset">Сначала</button><button class="ghost" id="k3">CB/CA = 1/3</button></div>
-    <div class="live" id="live"></div>
-    <div class="panel">
-      <div style="font-weight:600;margin-bottom:4px">Нижнее положение (стержень вертикален)</div>
-      <table aria-label="Скорости в нижнем положении">
-        <thead><tr><th>Точка</th><th>расчёт, м/с</th><th>предел, м/с</th><th>отклонение</th></tr></thead>
-        <tbody id="tb"></tbody>
-      </table>
-      <div class="note" id="tinfo"></div>
-    </div>
-  </div>
-</section>
+</header>
+<p class="sub">Олимпиада «Росатом», 11 класс, 2026 · задача 2</p>
 
-<section class="band" style="padding-top:0">
-  <h2>Скорости в нижнем положении как функции L/l</h2>
-  <p class="lede" style="margin-bottom:14px">Скорости даны в единицах √(gl), поэтому графики не зависят от l. Вертикальная линия — текущее L/l. Слева — сами скорости и пределы (пунктир), справа — относительное отклонение от предела в логарифмическом масштабе: прямая с наклоном −1 означает, что отклонение убывает как l/L.</p>
-  <div class="charts">
-    <div>
-      <div class="legend" id="lg1"></div>
-      <div class="fig chart" id="c1"><svg id="s1" role="img" aria-label="Скорости в нижнем положении в зависимости от L/l"></svg><div class="tip" id="t1"></div></div>
-    </div>
-    <div>
-      <div class="legend" id="lg2"></div>
-      <div class="fig chart" id="c2"><svg id="s2" role="img" aria-label="Отклонение от предела в зависимости от L/l"></svg><div class="tip" id="t2"></div></div>
+<div class="controls">
+  <div>
+    <label for="L">Длина нити <span class="math">L</span> — <span id="Lv"></span></label>
+    <input id="L" type="range" min="-1" max="3.5" step="0.01" value="1">
+    <div class="presets" id="Lp">
+      <button class="ghost" data-q="1">L = l</button>
+      <button class="ghost" data-q="10">L = 10 l</button>
+      <button class="ghost" data-q="100">L = 100 l</button>
+      <button class="ghost" data-q="1000">L = 1000 l</button>
     </div>
   </div>
-</section>
+  <div>
+    <label for="l">Длина гантели <span class="math">l</span> (стержень <span class="math">ABC</span>) — <span id="lv"></span></label>
+    <input id="l" type="range" min="0.1" max="3" step="0.05" value="1">
+  </div>
+  <div>
+    <label for="k">Положение груза <span class="math">B</span>: <span class="math">CB</span> / <span class="math">CA</span> = <span id="kv"></span></label>
+    <input id="k" type="range" min="0.05" max="0.8" step="any" value="0.333333">
+    <div class="presets"><button class="ghost" id="k3">как в задаче: 1/3</button></div>
+  </div>
+  <div>
+    <label for="speed">Скорость анимации — <span id="speedv">×0,25</span></label>
+    <input id="speed" type="range" min="0.05" max="1" step="0.05" value="0.25">
+  </div>
+  <div>
+    <label><input id="stop" type="checkbox" checked> остановиться в нижнем положении</label>
+    <label><input id="trails" type="checkbox" checked> показывать траектории</label>
+    <label><input id="arrows" type="checkbox" checked> показывать скорости</label>
+  </div>
+</div>
 
-<section class="band" style="padding-top:0">
-  <div class="text">
-    <h2>Откуда берётся предел</h2>
-    <p>Пусть CA = l, CB = kl (в задаче k = 1/3). Центр масс S лежит посередине AB: CS = (1+k)l/2, SA = SB = (1−k)l/2. При бесконечно длинной нити горизонтальных сил нет, и S движется только по вертикали. В нижнем положении S мгновенно покоится, стержень вращается вокруг S, а энергия mg(l + kl) целиком переходит в кинетическую:</p>
-    <div class="f">v<sub>A</sub> = v<sub>B</sub> = √(gl(1+k)),  v<sub>C</sub> = v<sub>A</sub>·(1+k)/(1−k).  При k = 1/3: v<sub>A</sub> = v<sub>B</sub> = √(4gl/3) ≈ 1,155√(gl),  v<sub>C</sub> = 2√(4gl/3) ≈ 2,309√(gl).</div>
-    <p><b>Почему важно только L/l.</b> Из величин g, l, L скорость можно составить лишь как √(gl)·f(L/l). Поэтому при изменении l при фиксированном L/l картинка просто масштабируется: скорости растут как √l, время — как √(l/g).</p>
-    <p><b>Как быстро достигается предел.</b> При конечной нити точка C поднимается на величину порядка l²/L, а нить отклоняется на угол порядка l/L. Её горизонтальная сила T·sinβ ограничена (0,4mg ≤ T ≤ 18mg) и за конечное время падения τ ≈ 1,41√(l/g) даёт горизонтальный импульс порядка m√(gl)·l/L. Поэтому отклонение от предела убывает как l/L — это видно на правом графике. При L/l = 100 оно меньше процента, при L/l = 1000 — сотые доли процента. При коротких нитях (L ≲ l) система ведёт себя как двойной маятник, и скорости A и B заметно различаются.</p>
-    <p class="note" style="font-family:Inter,sans-serif">Расчёт: уравнения Лагранжа для двух координат (угол нити β и угол стержня φ), метод Рунге–Кутты 4-го порядка; натяжение нити вычисляется из второго закона Ньютона для системы. Нижнее положение — момент, когда стержень впервые становится вертикальным.</p>
+<div class="legend">
+  <span><i style="border-color:var(--ink)"></i>нить и стержень</span>
+  <span><i style="border-color:var(--blue);border-top-width:3px"></i>скорость точки</span>
+  <span><i style="border-color:#bbb;border-top-style:dotted"></i>траектории <span class="math">A</span>, <span class="math">B</span>, <span class="math">C</span></span>
+  <span><i style="border-color:var(--gray);border-top-style:dashed;border-top-width:1px"></i>горизонталь через начальное положение <span class="math">C</span> и вертикаль через <span class="math">S</span></span>
+</div>
+
+<div class="card">
+  <h2>гантель</h2>
+  <svg id="scene" viewBox="0 0 840 420" aria-label="Гантель на нити"></svg>
+  <div class="status" id="status"></div>
+</div>
+
+<div class="card">
+  <h2>нижнее положение: стержень впервые вертикален</h2>
+  <table>
+    <thead><tr><th>точка</th><th>расчёт, м/с</th><th>предел при <span class="math">L</span> → ∞, м/с</th><th>отклонение</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <p class="note" id="tinfo" style="font-size:14px;color:#555"></p>
+</div>
+
+<div class="legend">
+  <span><i style="border-color:var(--ink)"></i><span class="math">v<sub>A</sub></span></span>
+  <span><i style="border-color:var(--blue);border-top-style:dashed"></i><span class="math">v<sub>B</sub></span></span>
+  <span><i style="border-color:var(--gray)"></i><span class="math">v<sub>C</sub></span></span>
+  <span><i style="border-color:#bbb;border-top-style:dotted"></i>предел</span>
+  <span><i style="border-color:var(--blue);border-top-width:1px"></i>текущее <span class="math">L</span>/<span class="math">l</span></span>
+</div>
+<div class="two">
+  <div class="card">
+    <h2>скорости в нижнем положении, в единицах √(<span class="math">gl</span>)</h2>
+    <svg id="c1" viewBox="0 0 420 300" aria-label="Скорости в нижнем положении в зависимости от L/l"></svg>
   </div>
-</section>
+  <div class="card">
+    <h2>отклонение от предела, логарифмический масштаб</h2>
+    <svg id="c2" viewBox="0 0 420 300" aria-label="Отклонение от предела в зависимости от L/l"></svg>
+  </div>
+</div>
+<div class="status" id="hover">Наведите курсор на график, чтобы увидеть значения.</div>
+
+<p class="note">Если нить бесконечно длинная, точка <span class="math">C</span> движется по горизонтали, а сила натяжения
+вертикальна. Тогда горизонтальных сил нет, и центр масс <span class="math">S</span> грузов движется только по вертикали.
+В нижнем положении <span class="math">S</span> на мгновение останавливается, и стержень вращается вокруг него.
+При <span class="math">CB</span> = <span class="math">kl</span> энергия <span class="math">mg</span>(<span class="math">l</span> + <span class="math">kl</span>)
+переходит в кинетическую, и
+<span class="math">v<sub>A</sub></span> = <span class="math">v<sub>B</sub></span> = √(<span class="math">gl</span>(1 + <span class="math">k</span>)),
+<span class="math">v<sub>C</sub></span> = <span class="math">v<sub>A</sub></span>(1 + <span class="math">k</span>)/(1 − <span class="math">k</span>).
+При <span class="math">k</span> = 1/3 это √(4<span class="math">gl</span>/3) ≈ 1,155√(<span class="math">gl</span>) и 2√(4<span class="math">gl</span>/3) ≈ 2,309√(<span class="math">gl</span>).</p>
+<p class="note">Из <span class="math">g</span>, <span class="math">l</span> и <span class="math">L</span> скорость составляется только в виде
+√(<span class="math">gl</span>)·<span class="math">f</span>(<span class="math">L</span>/<span class="math">l</span>). Поэтому при
+изменении <span class="math">l</span> и том же отношении <span class="math">L</span>/<span class="math">l</span> движение просто
+масштабируется: скорости растут как √<span class="math">l</span>, время — как √(<span class="math">l</span>/<span class="math">g</span>).</p>
+<p class="note">При конечной нити точка <span class="math">C</span> поднимается на величину порядка
+<span class="math">l</span>²/<span class="math">L</span>, а нить отклоняется на угол порядка <span class="math">l</span>/<span class="math">L</span>.
+Сила натяжения при этом ограничена: 0,4<span class="math">mg</span> ≤ <span class="math">T</span> ≤ 18<span class="math">mg</span>.
+Поэтому отклонение от предела убывает как <span class="math">l</span>/<span class="math">L</span> — на правом графике это прямая
+с наклоном −1. При <span class="math">L</span> ≲ <span class="math">l</span> система ведёт себя как двойной маятник, и скорости
+<span class="math">A</span> и <span class="math">B</span> сильно различаются.</p>
+<p class="note" style="font-size:14px;color:#555">Расчёт: уравнения Лагранжа для угла нити и угла стержня, метод Рунге–Кутты
+4-го порядка; <span class="math">g</span> = 9,81 м/с².</p>
+</main>
 
 <script>
-{
-const G=9.81;
-const $=id=>document.getElementById(id);
-const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+(() => {
+  const G = 9.81;
+  const $ = id => document.getElementById(id);
+  const NS = 'http://www.w3.org/2000/svg';
+  const BLUE = 'rgb(0,84,166)', GRAY = '#8a8a8a', INK = '#111';
+  const fmt = (v, n = 3) => v.toFixed(n).replace('.', ',').replace('-', '−');
+  const fmtL = x => x < 10 ? fmt(x, 2) : x < 100 ? fmt(x, 1) : fmt(x, 0);
+  const el = (tag, a, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in a) e.setAttribute(k, a[k]);
+    if (parent) parent.appendChild(e); return e;
+  };
+  const marker = (svg, id, col) => {
+    const defs = el('defs', {}, svg);
+    const m = el('marker', { id, viewBox: '0 0 8 4', refX: 8, refY: 2, markerWidth: 8, markerHeight: 4,
+      markerUnits: 'userSpaceOnUse', orient: 'auto' }, defs);
+    el('path', { d: 'M0,0 L8,2 L0,4 z', fill: col }, m);
+  };
 
-/* ---------- physics: exact model, string length L, rod CA=l, CB=k l ---------- */
-function model(L,l,k,g){
-  const d=[l,k*l],D1=d[0]+d[1],D2=d[0]*d[0]+d[1]*d[1];
-  const acc=s=>{const [b,p,bd,pd]=s,c=Math.sin(p-b),C=Math.cos(p-b);
-    const a11=2*L,a12=D1*c,r1=-D1*C*pd*pd-2*g*Math.sin(b),a21=L*D1*c,a22=D2,r2=L*D1*C*bd*bd+g*D1*Math.cos(p);
-    const det=a11*a22-a12*a21;return [(r1*a22-a12*r2)/det,(a11*r2-a21*r1)/det];};
-  const der=s=>{const a=acc(s);return [s[2],s[3],a[0],a[1]];};
-  const step=(s,h)=>{const k1=der(s),k2=der(s.map((v,i)=>v+h/2*k1[i])),k3=der(s.map((v,i)=>v+h/2*k2[i])),k4=der(s.map((v,i)=>v+h*k3[i]));
-    return s.map((v,i)=>v+h/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]));};
-  const pts=s=>{const [b,p,bd,pd]=s;const C={x:L*Math.sin(b),y:-L*Math.cos(b),vx:L*bd*Math.cos(b),vy:L*bd*Math.sin(b)};
-    const P=dd=>({x:C.x-dd*Math.cos(p),y:C.y-dd*Math.sin(p),vx:C.vx+dd*pd*Math.sin(p),vy:C.vy-dd*pd*Math.cos(p)});
-    return {C,A:P(d[0]),B:P(d[1])};};
-  const tension=s=>{const [b,p,bd,pd]=s,[bdd,pdd]=acc(s);let ax=0,ay=0;
-    for(const dd of d){ax+=L*(bdd*Math.cos(b)-bd*bd*Math.sin(b))+dd*(pdd*Math.sin(p)+pd*pd*Math.cos(p));
-      ay+=L*(bdd*Math.sin(b)+bd*bd*Math.cos(b))+dd*(-pdd*Math.cos(p)+pd*pd*Math.sin(p));}
-    return (-Math.sin(b)*ax+Math.cos(b)*(ay+2*g))/g;}; // in units of m g
-  return {step,pts,tension};
-}
-const sp=o=>Math.hypot(o.vx,o.vy);
-function lowest(L,l,k,g){
-  const M=model(L,l,k,g),h=0.002*Math.sqrt(l/g);let s=[0,0,0,0],t=0,Tmin=1e9,Tmax=-1e9;
-  for(let i=0;i<300000;i++){const T=M.tension(s);Tmin=Math.min(Tmin,T);Tmax=Math.max(Tmax,T);
-    const n=M.step(s,h);
-    if(n[1]>=Math.PI/2){const f=(Math.PI/2-s[1])/(n[1]-s[1]),sf=s.map((v,j)=>v+f*(n[j]-v)),q=M.pts(sf);
-      return {vA:sp(q.A),vB:sp(q.B),vC:sp(q.C),t:t+f*h,Tmin,Tmax:Math.max(Tmax,M.tension(sf))};}
-    s=n;t+=h;}
-  return null;
-}
-const lim=k=>{const a=Math.sqrt(1+k);return {vA:a,vB:a,vC:a*(1+k)/(1-k)};};
-
-/* ---------- state ---------- */
-let P={},M,s,t,run=false,snap=null,trails,last=0,res=null;
-const fmt=(x,n=3)=>x.toLocaleString('ru-RU',{minimumFractionDigits:n,maximumFractionDigits:n});
-const fmtL=x=>x<10?fmt(x,2):x<100?fmt(x,1):fmt(x,0);
-function read(){
-  const L=10**+$('L').value,l=+$('l').value,k=+$('k').value;
-  $('Lo').textContent=fmtL(L)+' м  (L/l = '+fmtL(L/l)+')';$('lo').textContent=fmt(l,2)+' м';
-  $('ko').textContent=Math.abs(k-1/3)<0.004?'1/3':fmt(k,2);
-  return {L,l,k};
-}
-function reset(){
-  P=read();M=model(P.L,P.l,P.k,G);s=[0,0,0,0];t=0;snap=null;trails={A:[],B:[],C:[]};
-  res=lowest(P.L,P.l,P.k,G);fillTable();draw();live();
-}
-function fillTable(){
-  const lm=lim(P.k),u=Math.sqrt(G*P.l),rows=[['A','vA','--sA'],['B','vB','--sB'],['C','vC','--sC']];
-  $('tb').innerHTML=rows.map(([n,key,c])=>{
-    if(!res)return `<tr><td>${n}</td><td>—</td><td>${fmt(lm[key]*u)}</td><td>—</td></tr>`;
-    const v=res[key],L0=lm[key]*u,dev=(v-L0)/L0*100;
-    return `<tr><td><span class="sw" style="background:var(${c})"></span>${n}</td><td>${fmt(v)}</td><td>${fmt(L0)}</td><td>${dev>=0?'+':'−'}${fmt(Math.abs(dev),Math.abs(dev)<0.1?3:2)} %</td></tr>`;}).join('');
-  $('tinfo').textContent=res?`Время до нижнего положения ${fmt(res.t,3)} с; натяжение нити за это время от ${fmt(res.Tmin,2)}mg до ${fmt(res.Tmax,2)}mg (нить натянута).`:'Стержень не дошёл до вертикали.';
-}
-function live(){
-  const T=M.tension(s);
-  $('live').innerHTML=`t = <b>${fmt(t,3)} с</b> · угол стержня φ = <b>${fmt(s[1]*180/Math.PI,1)}°</b> · угол нити β = <b>${fmt(s[0]*180/Math.PI,2)}°</b> · T = <b>${fmt(T,2)}mg</b>`;
-}
-
-/* ---------- animation drawing ---------- */
-const cv=$('cv'),ctx=cv.getContext('2d');
-function view(W,H){
-  const {L,l}=P;
-  if(L<=2*l){const R=L+l*1.05;const sc=Math.min(W/(2*R),H/(R*1.2));return {sc,cx:W/2,cy:H*0.1,ox:0,oy:0};}
-  const sc=Math.min(W/(3.2*l),H/(2.4*l));return {sc,cx:W/2,cy:H*0.42,ox:-0.45*l,oy:-L-0.2*l};
-}
-function arrow(x1,y1,x2,y2,col){
-  const a=Math.atan2(y2-y1,x2-x1),len=Math.hypot(x2-x1,y2-y1);if(len<3)return;
-  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-10*Math.cos(a-0.4),y2-10*Math.sin(a-0.4));ctx.lineTo(x2-10*Math.cos(a+0.4),y2-10*Math.sin(a+0.4));ctx.closePath();ctx.fill();
-}
-function draw(){
-  const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;if(!W)return;
-  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);}
-  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-  const V=view(W,H),X=x=>V.cx+(x-V.ox)*V.sc,Y=y=>V.cy-(y-V.oy)*V.sc;
-  const ink=css('--ink'),mut=css('--muted'),grid=css('--line'),col={A:css('--sA'),B:css('--sB'),C:css('--sC')};
-  ctx.font='14px Inter,sans-serif';
-  // horizontal through initial C
-  ctx.strokeStyle=grid;ctx.setLineDash([5,5]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,Y(-P.L));ctx.lineTo(W,Y(-P.L));ctx.stroke();ctx.setLineDash([]);
-  // ceiling
-  const oy=Y(0);
-  if(oy>-5){ctx.strokeStyle=ink;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(X(0)-60,oy);ctx.lineTo(X(0)+60,oy);ctx.stroke();
-    for(let i=-60;i<60;i+=10){ctx.beginPath();ctx.moveTo(X(0)+i,oy);ctx.lineTo(X(0)+i+8,oy-8);ctx.stroke();}}
-  else{ctx.fillStyle=mut;ctx.fillText('точка подвеса на '+fmtL(P.L)+' м выше ↑',10,20);}
-  const q=M.pts(s);
-  // trails
-  for(const n of ['A','B','C']){const tr=trails[n];if(tr.length<2)continue;ctx.strokeStyle=col[n];ctx.globalAlpha=.45;ctx.lineWidth=1.2;ctx.beginPath();
-    tr.forEach((p,i)=>i?ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1])));ctx.stroke();ctx.globalAlpha=1;}
-  // string and rod
-  ctx.strokeStyle=ink;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(q.C.x),Y(q.C.y));ctx.stroke();
-  ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(X(q.C.x),Y(q.C.y));ctx.lineTo(X(q.A.x),Y(q.A.y));ctx.stroke();
-  // velocity arrows (scale: limit v_C -> 0.9 l)
-  const va=0.9*P.l/(lim(P.k).vC*Math.sqrt(G*P.l))*V.sc;
-  for(const n of ['A','B','C']){const o=q[n];arrow(X(o.x),Y(o.y),X(o.x)+o.vx*va,Y(o.y)-o.vy*va,col[n]);}
-  // masses
-  for(const n of ['A','B']){ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(q[n].x),Y(q[n].y),9,0,7);ctx.fill();
-    ctx.strokeStyle=col[n];ctx.lineWidth=3;ctx.stroke();}
-  ctx.fillStyle=css('--bg');ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(q.C.x),Y(q.C.y),5,0,7);ctx.fill();ctx.stroke();
-  // labels
-  ctx.fillStyle=ink;ctx.font='600 15px Inter,sans-serif';
-  const nx=-Math.sin(s[1]),ny=Math.cos(s[1]);
-  for(const n of ['A','B','C'])ctx.fillText(n,X(q[n].x)+16*nx-5,Y(q[n].y)-16*ny+5);
-  if(snap){ctx.font='14px Inter,sans-serif';ctx.fillStyle=mut;ctx.fillText('нижнее положение пройдено',10,H-12);}
-}
-function frame(ts){
-  if(!run){last=0;return;}
-  const dt=last?Math.min((ts-last)/1000,0.05):0;last=ts;
-  let target=t+dt*+$('slow').value;const h=0.001*Math.sqrt(P.l/G);
-  while(t<target){
-    const n=M.step(s,h);
-    if(!snap&&n[1]>=Math.PI/2){const f=(Math.PI/2-s[1])/(n[1]-s[1]);s=s.map((v,j)=>v+f*(n[j]-v));t+=f*h;snap=true;
-      if($('stop').checked){run=false;$('play').textContent='Продолжить';break;}continue;}
-    s=n;t+=h;
+  // ---------- модель: нить длины L, стержень CA = l, CB = k l, два груза массы m ----------
+  function model(L, l, k, g) {
+    const d = [l, k * l], D1 = d[0] + d[1], D2 = d[0] * d[0] + d[1] * d[1];
+    const acc = s => {
+      const [b, p, bd, pd] = s, c = Math.sin(p - b), C = Math.cos(p - b);
+      const a11 = 2 * L, a12 = D1 * c, r1 = -D1 * C * pd * pd - 2 * g * Math.sin(b);
+      const a21 = L * D1 * c, a22 = D2, r2 = L * D1 * C * bd * bd + g * D1 * Math.cos(p);
+      const det = a11 * a22 - a12 * a21;
+      return [(r1 * a22 - a12 * r2) / det, (a11 * r2 - a21 * r1) / det];
+    };
+    const der = s => { const a = acc(s); return [s[2], s[3], a[0], a[1]]; };
+    const step = (s, h) => {
+      const k1 = der(s), k2 = der(s.map((v, i) => v + h / 2 * k1[i])),
+        k3 = der(s.map((v, i) => v + h / 2 * k2[i])), k4 = der(s.map((v, i) => v + h * k3[i]));
+      return s.map((v, i) => v + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
+    };
+    const pts = s => {
+      const [b, p, bd, pd] = s;
+      const C = { x: L * Math.sin(b), y: -L * Math.cos(b), vx: L * bd * Math.cos(b), vy: L * bd * Math.sin(b) };
+      const P = dd => ({ x: C.x - dd * Math.cos(p), y: C.y - dd * Math.sin(p),
+        vx: C.vx + dd * pd * Math.sin(p), vy: C.vy - dd * pd * Math.cos(p) });
+      return { C, A: P(d[0]), B: P(d[1]), S: P((d[0] + d[1]) / 2) };
+    };
+    const tension = s => {           // в единицах mg
+      const [b, p, bd, pd] = s, [bdd, pdd] = acc(s); let ax = 0, ay = 0;
+      for (const dd of d) {
+        ax += L * (bdd * Math.cos(b) - bd * bd * Math.sin(b)) + dd * (pdd * Math.sin(p) + pd * pd * Math.cos(p));
+        ay += L * (bdd * Math.sin(b) + bd * bd * Math.cos(b)) + dd * (-pdd * Math.cos(p) + pd * pd * Math.sin(p));
+      }
+      return (-Math.sin(b) * ax + Math.cos(b) * (ay + 2 * g)) / g;
+    };
+    return { step, pts, tension };
   }
-  const q=M.pts(s);for(const n of ['A','B','C']){trails[n].push([q[n].x,q[n].y]);if(trails[n].length>900)trails[n].shift();}
-  draw();live();
-  if(run)requestAnimationFrame(frame);
-}
-$('play').onclick=()=>{run=!run;$('play').textContent=run?'Пауза':'Продолжить';if(run)requestAnimationFrame(frame);};
-$('reset').onclick=()=>{run=false;$('play').textContent='Пуск';reset();};
-$('k3').onclick=()=>{$('k').value=1/3;onParam();};
-function onParam(){run=false;$('play').textContent='Пуск';reset();computeSweep();drawCharts();}
-for(const id of ['L','l'])$(id).addEventListener('input',()=>{run=false;$('play').textContent='Пуск';reset();drawCharts();});
-$('k').addEventListener('input',onParam);
-new ResizeObserver(draw).observe($('stage'));
+  const sp = o => Math.hypot(o.vx, o.vy);
+  function lowest(L, l, k, g) {
+    const M = model(L, l, k, g), h = 0.002 * Math.sqrt(l / g);
+    let s = [0, 0, 0, 0], t = 0, Tmin = 1e9, Tmax = -1e9;
+    for (let i = 0; i < 300000; i++) {
+      const T = M.tension(s); Tmin = Math.min(Tmin, T); Tmax = Math.max(Tmax, T);
+      const n = M.step(s, h);
+      if (n[1] >= Math.PI / 2) {
+        const f = (Math.PI / 2 - s[1]) / (n[1] - s[1]), sf = s.map((v, j) => v + f * (n[j] - v)), q = M.pts(sf);
+        return { A: sp(q.A), B: sp(q.B), C: sp(q.C), t: t + f * h, Tmin, Tmax: Math.max(Tmax, M.tension(sf)) };
+      }
+      s = n; t += h;
+    }
+    return null;
+  }
+  const lim = k => { const a = Math.sqrt(1 + k); return { A: a, B: a, C: a * (1 + k) / (1 - k) }; };
 
-/* ---------- charts ---------- */
-let sweep=[];
-function computeSweep(){
-  const k=+$('k').value,lm=lim(k);sweep=[];
-  for(let i=0;i<=56;i++){const r=10**(-0.5+i*4/56),o=lowest(r,1,k,1);if(!o)continue;
-    sweep.push({r,A:o.vA,B:o.vB,C:o.vC,dA:Math.abs(o.vA-lm.vA)/lm.vA,dB:Math.abs(o.vB-lm.vB)/lm.vB,dC:Math.abs(o.vC-lm.vC)/lm.vC,
-      sA:Math.sign(o.vA-lm.vA),sB:Math.sign(o.vB-lm.vB),sC:Math.sign(o.vC-lm.vC)});}
-}
-const SER=[['A','--sA','v_A'],['B','--sB','v_B'],['C','--sC','v_C']];
-$('lg1').innerHTML=SER.map(([n,c])=>`<span style="color:var(${c})"><i></i><span style="color:var(--ink)">${n}</span></span>`).join('')+`<span style="color:var(--muted)"><i class="dash"></i>предел</span>`;
-$('lg2').innerHTML=SER.map(([n,c])=>`<span style="color:var(${c})"><i></i><span style="color:var(--ink)">${n}</span></span>`).join('')+`<span style="color:var(--muted)"><i class="dash"></i>∝ l/L</span>`;
-function chart(svg,tip,mode){
-  const W=svg.clientWidth,H=svg.clientHeight;if(!W||!sweep.length)return;
-  const narrow=W<520,m={l:narrow?40:52,r:narrow?28:40,t:10,b:38},iw=W-m.l-m.r,ih=H-m.t-m.b;
-  const x0=-0.5,x1=3.5,X=r=>m.l+(Math.log10(r)-x0)/(x1-x0)*iw;
-  const lm=lim(+$('k').value);let Y,yt,yl;
-  if(mode===1){const ymax=Math.max(lm.vC*1.12,...sweep.map(d=>Math.max(d.A,d.B,d.C)));Y=v=>m.t+ih-(v/ymax)*ih;
-    const st=ymax>3?1:0.5;yt=[];for(let v=0;v<=ymax+1e-9;v+=st)yt.push(v);yl=v=>fmt(v,1);}
-  else{const y0=-5,y1=0.5;Y=v=>m.t+ih-(Math.log10(Math.max(v,1e-6))-y0)/(y1-y0)*ih;yt=[1e-5,1e-4,1e-3,1e-2,1e-1,1];
-    yl=v=>v>=0.01?fmt(v*100,0)+'%':v>=0.001?fmt(v*100,1)+'%':v>=1e-4?fmt(v*100,2)+'%':fmt(v*100,3)+'%';}
-  const g=css('--grid'),mu=css('--muted'),ink=css('--ink');
-  let o=`<g font-family="Inter,sans-serif" font-size="12" fill="${mu}">`;
-  for(const v of yt){o+=`<line x1="${m.l}" x2="${m.l+iw}" y1="${Y(v)}" y2="${Y(v)}" stroke="${g}"/><text x="${m.l-6}" y="${Y(v)+4}" text-anchor="end">${yl(v)}</text>`;}
-  for(const e of [0,1,2,3]){if(narrow&&e===0)continue;const xv=10**e;o+=`<text x="${X(xv)}" y="${H-20}" text-anchor="middle">${fmt(xv,0)}</text>`;}
-  o+=`<line x1="${m.l}" x2="${m.l+iw}" y1="${m.t+ih}" y2="${m.t+ih}" stroke="${mu}"/>`;
-  o+=`<text x="${m.l+iw}" y="${H-4}" text-anchor="end">L/l</text>`;
-  if(mode===1){o+=`<text x="${m.l+4}" y="${m.t+12}">v / √(gl)</text>`;
-    for(const [n,c] of [['vA','--sA'],['vC','--sC']])o+=`<line x1="${m.l}" x2="${m.l+iw}" y1="${Y(lm[n])}" y2="${Y(lm[n])}" stroke="${css(c)}" stroke-dasharray="5 4" opacity=".8"/>`;
-    o+=`<text x="${m.l+iw}" y="${Y(lm.vC)-6}" text-anchor="end" fill="${ink}">${fmt(lm.vC,3)}</text><text x="${m.l+iw}" y="${Y(lm.vA)+16}" text-anchor="end" fill="${ink}">${fmt(lm.vA,3)}</text>`;}
-  else{o+=`<text x="${m.l+4}" y="${m.t+12}">|v − v∞| / v∞</text>`;
-    const ref=sweep.find(d=>d.r>=100);const c=ref?ref.dC*ref.r:1;
-    o+=`<line x1="${X(10**x0)}" y1="${Y(c/10**x0)}" x2="${X(10**x1)}" y2="${Y(c/10**x1)}" stroke="${mu}" stroke-dasharray="5 4"/>`;}
-  // current L/l
-  const cur=Math.min(Math.max(P.L/P.l,10**x0),10**x1);o+=`<line x1="${X(cur)}" x2="${X(cur)}" y1="${m.t}" y2="${m.t+ih}" stroke="${css('--accent')}" stroke-width="1.5"/>`;
-  o+=`<defs><clipPath id="cp${mode}"><rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}"/></clipPath></defs><g clip-path="url(#cp${mode})">`;
-  for(const [n,c] of SER){const key=mode===1?n:'d'+n;
-    o+=`<polyline fill="none" stroke="${css(c)}" stroke-width="2" stroke-linejoin="round" points="${sweep.map(d=>X(d.r).toFixed(1)+','+Y(d[key]).toFixed(1)).join(' ')}"/>`;}
-  o+=`</g><g id="hv${mode}"></g></g>`;
-  svg.innerHTML=o;
-  svg.onpointermove=e=>{const b=svg.getBoundingClientRect(),px=e.clientX-b.left;
-    let best=sweep[0];for(const d of sweep)if(Math.abs(X(d.r)-px)<Math.abs(X(best.r)-px))best=d;
-    const hx=X(best.r);let h=`<line x1="${hx}" x2="${hx}" y1="${m.t}" y2="${m.t+ih}" stroke="${mu}" stroke-width="1"/>`;
-    for(const [n,c] of SER){const key=mode===1?n:'d'+n;h+=`<circle cx="${hx}" cy="${Y(best[key])}" r="4.5" fill="${css(c)}" stroke="${css('--bg')}" stroke-width="2"/>`;}
-    svg.querySelector('#hv'+mode).innerHTML=h;
-    tip.style.display='block';
-    tip.innerHTML=`L/l = <b>${fmtL(best.r)}</b><br>`+SER.map(([n,c])=>`<span class="sw" style="background:var(${c})"></span>${n}: `+(mode===1?fmt(best[n],3)+' √(gl)':(best['s'+n]>=0?'+':'−')+fmt(best['d'+n]*100,best['d'+n]<0.001?4:2)+' %')).join('<br>');
-    const tx=px+14+tip.offsetWidth>W?px-14-tip.offsetWidth:px+14;tip.style.left=tx+'px';tip.style.top=(m.t+8)+'px';};
-  svg.onpointerleave=()=>{tip.style.display='none';const hv=svg.querySelector('#hv'+mode);if(hv)hv.innerHTML='';};
-}
-function drawCharts(){chart($('s1'),$('t1'),1);chart($('s2'),$('t2'),2);}
-new ResizeObserver(drawCharts).observe($('c1'));new ResizeObserver(drawCharts).observe($('c2'));
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{draw();drawCharts();});
-new MutationObserver(()=>{draw();drawCharts();}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  // ---------- сцена ----------
+  const W = 840, H = 420, scene = $('scene');
+  marker(scene, 'hb', BLUE); marker(scene, 'hk', INK);
+  const gStatic = el('g', {}, scene), gTr = el('g', {}, scene), gDyn = el('g', {}, scene);
+  let P, M, s, t, snap, playing = false, rate = 0.25, last = null, trails, res, V;
 
-reset();computeSweep();drawCharts();
-}
+  function view() {
+    const { L, l } = P;
+    if (L <= 2 * l) { const R = L + 1.05 * l, sc = Math.min(W / (2.1 * R), H / (1.25 * R)); return { sc, cx: W / 2, cy: 40, ox: 0, oy: 0 }; }
+    const sc = Math.min(W / (3.2 * l), H / (2.3 * l)); return { sc, cx: W / 2, cy: H * 0.4, ox: -0.45 * l, oy: -L - 0.2 * l };
+  }
+  const X = x => V.cx + (x - V.ox) * V.sc, Y = y => V.cy - (y - V.oy) * V.sc;
+
+  function drawStatic() {
+    gStatic.innerHTML = '';
+    el('line', { x1: 0, y1: Y(-P.L), x2: W, y2: Y(-P.L), stroke: GRAY, 'stroke-width': 1, 'stroke-dasharray': '6 4' }, gStatic);
+    const oy = Y(0);
+    if (oy > -5) {
+      const x0 = X(0);
+      el('line', { x1: x0 - 50, y1: oy, x2: x0 + 50, y2: oy, stroke: INK, 'stroke-width': 1.6 }, gStatic);
+      for (let x = x0 - 50; x <= x0 + 43; x += 9)
+        el('line', { x1: x, y1: oy, x2: x + 7, y2: oy - 7, stroke: INK, 'stroke-width': 0.8 }, gStatic);
+    } else {
+      el('text', { x: 12, y: 24, 'font-size': 15, fill: '#555' }, gStatic).textContent = `точка подвеса на ${fmtL(P.L)} м выше`;
+    }
+  }
+
+  function drawDyn() {
+    const q = M.pts(s);
+    gDyn.innerHTML = '';
+    // вертикаль через S
+    el('line', { x1: X(q.S.x), y1: 0, x2: X(q.S.x), y2: H, stroke: GRAY, 'stroke-width': 1, 'stroke-dasharray': '6 4' }, gDyn);
+    // нить, стержень
+    el('line', { x1: X(0), y1: Y(0), x2: X(q.C.x), y2: Y(q.C.y), stroke: INK, 'stroke-width': 1.2 }, gDyn);
+    el('line', { x1: X(q.C.x), y1: Y(q.C.y), x2: X(q.A.x), y2: Y(q.A.y), stroke: INK, 'stroke-width': 2.4, 'stroke-linecap': 'round' }, gDyn);
+    if (Y(0) > -5) el('circle', { cx: X(0), cy: Y(0), r: 3, fill: INK }, gDyn);
+    // скорости
+    if ($('arrows').checked) {
+      const va = 0.8 * P.l / (lim(P.k).C * Math.sqrt(G * P.l)) * V.sc;
+      for (const n of ['A', 'B', 'C']) {
+        const o = q[n], dx = o.vx * va, dy = -o.vy * va;
+        if (Math.hypot(dx, dy) > 9)
+          el('line', { x1: X(o.x), y1: Y(o.y), x2: X(o.x) + dx, y2: Y(o.y) + dy, stroke: BLUE, 'stroke-width': 2, 'marker-end': 'url(#hb)' }, gDyn);
+      }
+    }
+    // грузы и точки (точки поверх всего)
+    for (const n of ['A', 'B']) el('circle', { cx: X(q[n].x), cy: Y(q[n].y), r: 8, fill: '#fff', stroke: INK, 'stroke-width': 1.6 }, gDyn);
+    for (const n of ['S', 'C']) el('circle', { cx: X(q[n].x), cy: Y(q[n].y), r: 3.6, fill: '#fff', stroke: INK, 'stroke-width': 1.1 }, gDyn);
+    // подписи: в сторону, перпендикулярную стержню, вверх
+    // подпись ставится по нормали к стержню, с той стороны, куда не смотрит скорость точки
+    const nx = -Math.sin(s[1]), ny = Math.cos(s[1]);
+    for (const n of ['A', 'B', 'S', 'C']) {
+      const off = n === 'A' || n === 'B' ? 20 : 15, side = (q[n].vx * nx + q[n].vy * ny) > 0 ? -1 : 1;
+      el('text', { x: X(q[n].x) + side * off * nx, y: Y(q[n].y) - side * off * ny + 6, 'font-size': 17, 'font-style': 'italic', 'text-anchor': 'middle' }, gDyn).textContent = n;
+    }
+    // траектории
+    gTr.innerHTML = '';
+    if ($('trails').checked) for (const n of ['A', 'B', 'C']) {
+      const tr = trails[n]; if (tr.length < 2) continue;
+      el('path', { d: tr.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1)).join(''),
+        fill: 'none', stroke: '#bbb', 'stroke-width': 1.2, 'stroke-dasharray': '1.5 3' }, gTr);
+    }
+    // строка состояния
+    const T = M.tension(s), deg = s[1] * 180 / Math.PI;
+    let msg = `t = ${fmt(t, 3)} с; угол стержня ${fmt(deg, 1)}°, угол нити ${fmt(s[0] * 180 / Math.PI, 2)}°; натяжение T = ${fmt(T, 2)} mg.`;
+    if (snap && Math.abs(deg - 90) < 0.05) msg = `Нижнее положение: стержень вертикален. ` + msg;
+    else if (t === 0) msg = 'Стержень горизонтален, нить вертикальна. Нажмите «Пуск».';
+    $('status').textContent = msg;
+  }
+
+  function fillTable() {
+    const lm = lim(P.k), u = Math.sqrt(G * P.l);
+    $('tb').innerHTML = ['A', 'B', 'C'].map(n => {
+      const L0 = lm[n] * u;
+      if (!res) return `<tr><td class="math">v<sub>${n}</sub></td><td>—</td><td>${fmt(L0)}</td><td>—</td></tr>`;
+      const v = res[n], dev = (v - L0) / L0 * 100, a = Math.abs(dev);
+      return `<tr><td class="math">v<sub>${n}</sub></td><td>${fmt(v)}</td><td>${fmt(L0)}</td><td>${dev >= 0 ? '+' : '−'}${fmt(a, a < 0.1 ? 3 : 2)} %</td></tr>`;
+    }).join('');
+    $('tinfo').textContent = res
+      ? `Время до нижнего положения ${fmt(res.t, 3)} с. Натяжение нити за это время меняется от ${fmt(res.Tmin, 2)} mg до ${fmt(res.Tmax, 2)} mg, нить натянута.`
+      : 'Стержень не дошёл до вертикали.';
+  }
+
+  function readParams() {
+    const L = 10 ** +$('L').value, l = +$('l').value, k = +$('k').value;
+    $('Lv').textContent = `${fmtL(L)} м (L/l = ${fmtL(L / l)})`;
+    $('lv').textContent = fmt(l, 2) + ' м';
+    $('kv').textContent = Math.abs(k - 1 / 3) < 0.004 ? '1/3' : fmt(k, 2);
+    return { L, l, k };
+  }
+  function reset() {
+    P = readParams(); M = model(P.L, P.l, P.k, G); s = [0, 0, 0, 0]; t = 0; snap = false;
+    trails = { A: [], B: [], C: [] }; V = view();
+    res = lowest(P.L, P.l, P.k, G);
+    playing = false; $('play').textContent = 'Пуск';
+    drawStatic(); fillTable(); drawDyn(); drawCharts();
+  }
+
+  function frame(ts) {
+    if (last !== null && playing) {
+      const target = t + Math.min(0.05, (ts - last) / 1000) * rate, h = 0.001 * Math.sqrt(P.l / G);
+      while (t < target) {
+        const n = M.step(s, h);
+        if (!snap && n[1] >= Math.PI / 2) {
+          const f = (Math.PI / 2 - s[1]) / (n[1] - s[1]);
+          s = s.map((v, j) => v + f * (n[j] - v)); t += f * h; snap = true;
+          if ($('stop').checked) { playing = false; $('play').textContent = 'Пуск'; break; }
+          continue;
+        }
+        s = n; t += h;
+      }
+      const q = M.pts(s);
+      for (const n of ['A', 'B', 'C']) { trails[n].push([q[n].x, q[n].y]); if (trails[n].length > 900) trails[n].shift(); }
+      drawDyn();
+    }
+    last = ts; requestAnimationFrame(frame);
+  }
+
+  // ---------- графики ----------
+  let sweep = [];
+  function computeSweep() {
+    const k = +$('k').value, lm = lim(k); sweep = [];
+    for (let i = 0; i <= 56; i++) {
+      const r = 10 ** (-0.5 + i * 4 / 56), o = lowest(r, 1, k, 1);
+      if (!o) continue;
+      const row = { r };
+      for (const n of ['A', 'B', 'C']) { row[n] = o[n]; row['d' + n] = (o[n] - lm[n]) / lm[n]; }
+      sweep.push(row);
+    }
+  }
+  const SER = [['A', INK, ''], ['B', BLUE, '6 4'], ['C', GRAY, '']];
+  function chart(svg, mode) {
+    const w = 420, h = 300, m = { l: 46, r: 16, t: 22, b: 40 }, iw = w - m.l - m.r, ih = h - m.t - m.b;
+    const x0 = -0.5, x1 = 3.5, Xc = r => m.l + (Math.log10(r) - x0) / (x1 - x0) * iw;
+    const lm = lim(+$('k').value);
+    let Yc, ticks, tl;
+    if (mode === 1) {
+      const ymax = Math.max(lm.C * 1.15, ...sweep.map(d => Math.max(d.A, d.B, d.C)));
+      Yc = v => m.t + ih - v / ymax * ih; ticks = []; for (let v = 0.5; v < ymax; v += 0.5) ticks.push(v);
+      tl = v => fmt(v, 1);
+    } else {
+      const y0 = -5, y1 = 0.5;
+      Yc = v => m.t + ih - (Math.log10(Math.max(Math.abs(v), 1e-6)) - y0) / (y1 - y0) * ih;
+      ticks = [1e-4, 1e-3, 1e-2, 1e-1, 1];
+      tl = v => v >= 0.01 ? Math.round(v * 100) + ' %' : String(v * 100).replace('.', ',') + ' %';
+    }
+    svg.innerHTML = ''; marker(svg, 'ax' + mode, INK);
+    const g = el('g', { 'font-size': 13 }, svg);
+    // оси с наконечником, без сетки и рамки
+    el('line', { x1: m.l, y1: m.t + ih, x2: w - 4, y2: m.t + ih, stroke: INK, 'stroke-width': 0.75, 'marker-end': `url(#ax${mode})` }, g);
+    el('line', { x1: m.l, y1: m.t + ih, x2: m.l, y2: 4, stroke: INK, 'stroke-width': 0.75, 'marker-end': `url(#ax${mode})` }, g);
+    el('text', { x: w - 4, y: m.t + ih + 32, 'text-anchor': 'end', 'font-style': 'italic', 'font-size': 15 }, g).textContent = 'L/l';
+    for (const e of [0, 1, 2, 3]) {
+      const xv = Xc(10 ** e);
+      el('line', { x1: xv, y1: m.t + ih, x2: xv, y2: m.t + ih + 5, stroke: INK, 'stroke-width': 0.6 }, g);
+      el('text', { x: xv, y: m.t + ih + 19, 'text-anchor': 'middle' }, g).textContent = (10 ** e).toLocaleString('ru-RU');
+    }
+    for (const v of ticks) {
+      el('line', { x1: m.l - 5, y1: Yc(v), x2: m.l, y2: Yc(v), stroke: INK, 'stroke-width': 0.6 }, g);
+      el('text', { x: m.l - 8, y: Yc(v) + 4, 'text-anchor': 'end' }, g).textContent = tl(v);
+    }
+    if (mode === 1) {
+      for (const n of ['A', 'C']) el('line', { x1: m.l, x2: m.l + iw, y1: Yc(lm[n]), y2: Yc(lm[n]), stroke: '#bbb', 'stroke-width': 1.2, 'stroke-dasharray': '1.5 3' }, g);
+      el('text', { x: m.l + iw, y: Yc(lm.C) - 6, 'text-anchor': 'end' }, g).textContent = fmt(lm.C, 3);
+      el('text', { x: m.l + iw, y: Yc(lm.A) + 16, 'text-anchor': 'end' }, g).textContent = fmt(lm.A, 3);
+    } else {
+      const ref = sweep.find(d => d.r >= 100), c = ref ? Math.abs(ref.dC) * ref.r : 1;
+      el('line', { x1: Xc(10 ** x0), y1: Yc(c / 10 ** x0), x2: Xc(10 ** x1), y2: Yc(c / 10 ** x1), stroke: '#bbb', 'stroke-width': 1.2, 'stroke-dasharray': '1.5 3' }, g);
+      el('text', { x: Xc(10 ** 2.3), y: Yc(c / 10 ** 2.3) - 30, 'text-anchor': 'middle', fill: '#555' }, g).textContent = '∝ l/L';
+    }
+    const cur = Math.min(Math.max(P.L / P.l, 10 ** x0), 10 ** x1);
+    el('line', { x1: Xc(cur), x2: Xc(cur), y1: m.t, y2: m.t + ih, stroke: BLUE, 'stroke-width': 1 }, g);
+    const clipId = 'cp' + mode;
+    el('rect', { x: m.l, y: m.t - 10, width: iw, height: ih + 10 }, el('clipPath', { id: clipId }, el('defs', {}, svg)));
+    const cg = el('g', { 'clip-path': `url(#${clipId})` }, g);
+    for (const [n, col, dash] of SER) {
+      const key = mode === 1 ? n : 'd' + n;
+      el('polyline', { fill: 'none', stroke: col, 'stroke-width': 2, 'stroke-dasharray': dash, 'stroke-linejoin': 'round',
+        points: sweep.map(d => Xc(d.r).toFixed(1) + ',' + Yc(d[key]).toFixed(1)).join(' ') }, cg);
+    }
+    const hv = el('g', {}, g);
+    svg.onpointermove = e => {
+      const b = svg.getBoundingClientRect(), px = (e.clientX - b.left) / b.width * w;
+      let best = sweep[0]; for (const d of sweep) if (Math.abs(Xc(d.r) - px) < Math.abs(Xc(best.r) - px)) best = d;
+      hv.innerHTML = '';
+      el('line', { x1: Xc(best.r), x2: Xc(best.r), y1: m.t, y2: m.t + ih, stroke: GRAY, 'stroke-width': 0.75 }, hv);
+      for (const [n, col] of SER) el('circle', { cx: Xc(best.r), cy: Yc(best[mode === 1 ? n : 'd' + n]), r: 3.6, fill: '#fff', stroke: col, 'stroke-width': 1.4 }, hv);
+      $('hover').innerHTML = `<span class="math">L</span>/<span class="math">l</span> = ${fmtL(best.r)}: ` + ['A', 'B', 'C'].map(n => {
+        const d = best['d' + n], a = Math.abs(d) * 100;
+        return `<span class="math">v<sub>${n}</sub></span> = ${fmt(best[n], 3)}√(<span class="math">gl</span>) (${d >= 0 ? '+' : '−'}${fmt(a, a < 0.1 ? 4 : 2)} %)`;
+      }).join('; ');
+    };
+    svg.onpointerleave = () => { hv.innerHTML = ''; };
+  }
+  function drawCharts() { if (!sweep.length) computeSweep(); chart($('c1'), 1); chart($('c2'), 2); }
+
+  // ---------- управление ----------
+  $('play').onclick = () => {
+    if (snap && !$('stop').checked && s[1] > 20) reset();
+    playing = !playing; $('play').textContent = playing ? 'Пауза' : 'Пуск';
+  };
+  $('restart').onclick = reset;
+  $('speed').oninput = e => { rate = +e.target.value; $('speedv').textContent = '×' + fmt(rate, 2).replace(/,?0+$/, ''); };
+  $('L').oninput = reset; $('l').oninput = reset;
+  $('k').oninput = () => { sweep = []; reset(); };
+  $('k3').onclick = () => { $('k').value = 1 / 3; sweep = []; reset(); };
+  document.querySelectorAll('#Lp button').forEach(b => b.onclick = () => {
+    $('L').value = Math.log10(+b.dataset.q * +$('l').value).toFixed(3); reset();
+  });
+  $('trails').onchange = drawDyn; $('arrows').onchange = drawDyn;
+
+  reset();
+  requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>
