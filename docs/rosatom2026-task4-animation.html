@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стержень на движущемся полушаре</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111; --gray: #8a8a8a; --light: #d9d9d9;
+    --blue: rgb(0, 84, 166); --paper: #fbfaf7; --panel: #fff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "STIX Two Text", "Times New Roman", Georgia, serif;
+    font-size: 17px; line-height: 1.45;
+  }
+  main { max-width: 900px; margin: 0 auto; padding: 18px 16px 40px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 26px; font-weight: 600; margin: 6px 0; }
+  .sub { color: #555; margin: 0 0 12px; }
+  button {
+    font: inherit; font-size: 15px; border: 1px solid var(--ink); background: var(--ink);
+    color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--ink); }
+  .controls {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px 22px; background: var(--panel); border: 1px solid var(--light);
+    border-radius: 8px; padding: 12px 16px; margin: 10px 0 14px;
+  }
+  .controls label { font-size: 14px; color: #333; display: block; }
+  input[type=range] { width: 100%; accent-color: var(--ink); }
+  .presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .presets button { font-size: 13px; padding: 3px 9px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14px; margin: 4px 0 10px; }
+  .legend > span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid; }
+  .card { background: var(--panel); border: 1px solid var(--light); border-radius: 8px; padding: 10px 12px 6px; margin-bottom: 14px; }
+  .card h2 { font-size: 15px; font-weight: 400; color: #666; margin: 2px 0 4px; }
+  svg { width: 100%; height: auto; display: block; }
+  .math { font-style: italic; }
+  .status { font-size: 15px; min-height: 3em; margin: 2px 0 6px; }
+  .warn { color: #8a3b00; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 4px 8px; border-bottom: 1px solid var(--light); text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-weight: 400; color: #666; }
+  p.note { margin: 8px 0; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 14px; }
+  @media (max-width: 700px) { .two { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Стержень на движущемся полушаре</h1>
+  <div>
+    <button id="play">Пуск</button>
+    <button id="restart" class="ghost">Сначала</button>
+    <button id="to45" class="ghost">к α = 45°</button>
+  </div>
+</header>
+<p class="sub">Олимпиада «Росатом», 11 класс, 2026 · задача 4</p>
+
+<div class="controls">
+  <div>
+    <label for="v">Скорость полушара <span class="math">v</span> — <span id="vv"></span></label>
+    <input id="v" type="range" min="0.1" max="1" step="0.05" value="0.5">
+  </div>
+  <div>
+    <label for="R">Радиус полушара <span class="math">R</span> — <span id="Rv"></span></label>
+    <input id="R" type="range" min="0.2" max="1" step="0.05" value="0.5">
+  </div>
+  <div>
+    <label for="l">Длина стержня <span class="math">l</span> — <span id="lv"></span></label>
+    <input id="l" type="range" min="1" max="3" step="0.05" value="2.5">
+  </div>
+  <div>
+    <label for="speed">Скорость анимации — <span id="speedv">×1</span></label>
+    <input id="speed" type="range" min="0.1" max="2" step="0.05" value="1">
+  </div>
+  <div>
+    <label><input id="stop45" type="checkbox" checked> остановиться при α = 45°</label>
+    <label><input id="strobe" type="checkbox" checked> стробоскоп: положения через равные промежутки времени</label>
+  </div>
+  <div>
+    <label><input id="contact" type="checkbox" checked> скорости в точке касания</label>
+    <label><input id="tri" type="checkbox" checked> треугольник <span class="math">OMK</span> и размер <span class="math">x</span></label>
+    <label><input id="acc" type="checkbox" checked> ускорение конца стержня</label>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i style="border-color:var(--blue);border-top-width:3px"></i>скорость точки стержня</span>
+  <span><i style="border-color:var(--gray);border-top-width:3px"></i>скорость полушара</span>
+  <span><i style="border-color:var(--ink);border-top-width:1.5px"></i>ускорение конца и его составляющие</span>
+  <span><i style="border-color:var(--gray);border-top-style:dashed;border-top-width:1px"></i>построения</span>
+  <span><i style="border-color:#bbb;border-top-style:dotted"></i>стробоскоп</span>
+</div>
+
+<div class="card">
+  <h2>стержень и полушар</h2>
+  <svg id="scene" viewBox="0 0 840 480" aria-label="Стержень на полушаре"></svg>
+  <div class="status" id="status"></div>
+  <p class="note" style="font-size:14px;color:#555;margin-top:0">Стрелки у полушара и в точке касания нарисованы в одном масштабе, стрелки у конца стержня — в другом, более мелком.</p>
+</div>
+
+<div class="card">
+  <h2>конец стержня при α = 45°: расчёт по движению на рисунке и формулы</h2>
+  <table>
+    <thead><tr><th>величина</th><th>по движению, численно</th><th>по формуле</th><th>формула</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <p class="note" style="font-size:14px;color:#555">«По движению» — производные положения конца стержня, найденные численно из геометрии
+  (полушар едет равномерно, стержень касается его). «По формуле» — ответ задачи.</p>
+</div>
+
+<div class="legend">
+  <span><i style="border-color:var(--blue)"></i><span class="math">ωR</span>/<span class="math">v</span></span>
+  <span><i style="border-color:var(--ink)"></i><span class="math">a<sub>τ</sub></span>/<span class="math">l</span> = <span class="math">ε</span></span>
+  <span><i style="border-color:var(--gray);border-top-style:dashed"></i><span class="math">a<sub>n</sub></span>/<span class="math">l</span> = <span class="math">ω</span>²</span>
+  <span><i style="border-color:var(--blue);border-top-width:1px"></i>текущий угол</span>
+</div>
+<div class="two">
+  <div class="card">
+    <h2>угловая скорость стержня, в единицах <span class="math">v</span>/<span class="math">R</span></h2>
+    <svg id="c1" viewBox="0 0 420 300" aria-label="Угловая скорость в зависимости от угла"></svg>
+  </div>
+  <div class="card">
+    <h2>составляющие ускорения конца, в единицах <span class="math">lv</span>²/<span class="math">R</span>²</h2>
+    <svg id="c2" viewBox="0 0 420 300" aria-label="Составляющие ускорения в зависимости от угла"></svg>
+  </div>
+</div>
+<div class="status" id="hover">Наведите курсор на график, чтобы увидеть значения.</div>
+
+<p class="note"><b>Геометрия.</b> Пусть <span class="math">x</span> — расстояние от шарнира <span class="math">O</span>
+до центра полушара <span class="math">M</span>. Радиус <span class="math">MK</span> в точку касания перпендикулярен стержню,
+поэтому треугольник <span class="math">OMK</span> прямоугольный и <span class="math">x</span> sin <span class="math">α</span> = <span class="math">R</span>.
+Полушар едет равномерно, <span class="math">x</span> убывает со скоростью <span class="math">v</span>. Дифференцируя, получаем
+<span class="math">ω</span> = <span class="math">v</span> sin²<span class="math">α</span> / (<span class="math">R</span> cos <span class="math">α</span>).</p>
+<p class="note"><b>Точка касания.</b> Скорость полушара <span class="math">v</span> раскладывается на составляющую вдоль стержня
+и составляющую <span class="math">v</span> sin <span class="math">α</span> по нормали к нему. Точка стержня в <span class="math">K</span>
+движется перпендикулярно стержню со скоростью <span class="math">ω</span>·<span class="math">OK</span>, где
+<span class="math">OK</span> = <span class="math">R</span> cos <span class="math">α</span> / sin <span class="math">α</span>. Тела не
+проникают друг в друга, поэтому нормальные составляющие равны. Вдоль стержня скорости разные: полушар проскальзывает по стержню.</p>
+<p class="note"><b>Откуда ускорение.</b> Полушар едет равномерно, но стержень поворачивается всё быстрее: на стробоскопе угол между
+соседними положениями растёт. Поэтому у конца стержня есть касательное ускорение <span class="math">a<sub>τ</sub></span> = <span class="math">εl</span>
+и нормальное <span class="math">a<sub>n</sub></span> = <span class="math">ω</span>²<span class="math">l</span>. При <span class="math">α</span> = 45°
+получается <span class="math">a<sub>τ</sub></span> = (3/2)·<span class="math">v</span>²<span class="math">l</span>/<span class="math">R</span>²,
+<span class="math">a<sub>n</sub></span> = (1/2)·<span class="math">v</span>²<span class="math">l</span>/<span class="math">R</span>² и
+<span class="math">a</span> = √(5/2)·<span class="math">v</span>²<span class="math">l</span>/<span class="math">R</span>².</p>
+<p class="note"><b>Пределы модели.</b> При <span class="math">α</span> → 90° знаменатель cos <span class="math">α</span> стремится к нулю, и
+угловая скорость неограниченно растёт: полушар «выталкивает» стержень в вертикаль. Анимация поэтому заканчивается при
+<span class="math">α</span> = 80°. Кроме того, стержень должен доставать до полушара: <span class="math">l</span> ≥ <span class="math">OK</span>
+= <span class="math">R</span> ctg <span class="math">α</span>. Начальный угол выбирается так, чтобы это выполнялось.</p>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const NS = 'http://www.w3.org/2000/svg';
+  const BLUE = 'rgb(0,84,166)', GRAY = '#8a8a8a', INK = '#111';
+  const DEG = Math.PI / 180, AMAX = 80 * DEG, A45 = 45 * DEG;
+  const fmt = (v, n = 3) => v.toFixed(n).replace('.', ',').replace('-', '−');
+  const el = (tag, a, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in a) e.setAttribute(k, a[k]);
+    if (parent) parent.appendChild(e); return e;
+  };
+  const marker = (svg, id, col) => {
+    const defs = el('defs', {}, svg);
+    const m = el('marker', { id, viewBox: '0 0 8 4', refX: 8, refY: 2, markerWidth: 8, markerHeight: 4,
+      markerUnits: 'userSpaceOnUse', orient: 'auto' }, defs);
+    el('path', { d: 'M0,0 L8,2 L0,4 z', fill: col }, m);
+  };
+
+  // ---------- модель ----------
+  // Шарнир O в начале координат, ось x вправо, y вверх. Полушар слева, центр M = (−x, 0), едет вправо со скоростью v.
+  // Стержень идёт из O вверх-влево под углом α к горизонту: единичный вектор e = (−cos α, sin α).
+  let P, x0, T, t = 0, playing = false, rate = 1, last = null, stopped45 = false;
+  const f = a => Math.sin(a) ** 2 / Math.cos(a);                                   // ω = (v/R) f
+  const fp = a => Math.sin(a) * (1 + Math.cos(a) ** 2) / Math.cos(a) ** 2;          // df/dα
+  const alphaAt = tt => Math.asin(Math.min(1, P.R / (x0 - P.v * tt)));
+  const endAt = tt => { const a = alphaAt(tt); return [-P.l * Math.cos(a), P.l * Math.sin(a)]; };
+  const tAt = a => (x0 - P.R / Math.sin(a)) / P.v;
+
+  function readParams() {
+    const v = +$('v').value, R = +$('R').value, l = +$('l').value;
+    $('vv').textContent = fmt(v, 2) + ' м/с'; $('Rv').textContent = fmt(R, 2) + ' м'; $('lv').textContent = fmt(l, 2) + ' м';
+    const a0 = Math.max(15 * DEG, Math.atan(R / (0.95 * l)));    // точка касания на стержне: R ctg α ≤ 0,95 l
+    return { v, R, l, a0 };
+  }
+
+  // ---------- сцена ----------
+  const W = 840, H = 480, scene = $('scene');
+  marker(scene, 'hb', BLUE); marker(scene, 'hk', INK); marker(scene, 'hg', GRAY);
+  const gStatic = el('g', {}, scene), gStrobe = el('g', {}, scene), gDyn = el('g', {}, scene);
+  let V;
+  function view() {
+    const xl = -(x0 + P.R) - 0.15, xr = 0.35, yt = P.l * Math.sin(AMAX) + 0.25, yb = -0.35;
+    const sc = Math.min(W / (xr - xl), H / (yt - yb));
+    return { sc, ox: (W - sc * (xr - xl)) / 2 - sc * xl, oy: H - (H - sc * (yt - yb)) / 2 + sc * yb };
+  }
+  const X = x => V.ox + x * V.sc, Y = y => V.oy - y * V.sc;
+  const arrow = (g, x1, y1, dx, dy, col, w, mk, maxLen) => {
+    let L = Math.hypot(dx, dy); if (L * V.sc < 6) return false;
+    let cut = false; if (maxLen && L > maxLen) { dx *= maxLen / L; dy *= maxLen / L; cut = true; }
+    el('line', { x1: X(x1), y1: Y(y1), x2: X(x1 + dx), y2: Y(y1 + dy), stroke: col, 'stroke-width': w, 'marker-end': `url(#${mk})` }, g);
+    return cut;
+  };
+  const label = (g, x, y, s, opts = {}) => {
+    const e = el('text', Object.assign({ x, y, 'font-size': 17, 'font-style': 'italic', 'text-anchor': 'middle' }, opts), g);
+    e.innerHTML = s; return e;
+  };
+
+  function drawStatic() {
+    gStatic.innerHTML = '';
+    const y0 = Y(0), x1 = X(-(x0 + P.R) - 0.1), x2 = X(0.3);
+    el('line', { x1, y1: y0, x2, y2: y0, stroke: INK, 'stroke-width': 1.6 }, gStatic);
+    for (let x = x1; x <= x2 - 7; x += 9) el('line', { x1: x, y1: y0, x2: x + 7, y2: y0 + 7, stroke: INK, 'stroke-width': 0.8 }, gStatic);
+  }
+
+  // скорости и ускорение конца стержня из формул
+  const kin = a => {
+    const w = P.v / P.R * f(a), e = (P.v / P.R) ** 2 * f(a) * fp(a);
+    return { w, e, v1: w * P.l, at: e * P.l, an: w * w * P.l };
+  };
+
+  function drawDyn() {
+    const a = alphaAt(t), x = x0 - P.v * t, s = Math.sin(a), c = Math.cos(a);
+    const M = [-x, 0], Kd = x * c, K = [-Kd * c, Kd * s], E = [-P.l * c, P.l * s], k = kin(a);
+    const vs = 0.22 * P.l / (P.v / P.R * f(A45) * P.l);        // масштаб скоростей: v₁(45°) → 0,22 l
+    const as = 0.22 * P.l / (Math.sqrt(2.5) * (P.v / P.R) ** 2 * P.l);   // масштаб ускорений: a(45°) → 0,22 l
+    const maxL = 0.45 * P.l;
+    const cs = 0.9 * P.R / P.v;                                 // масштаб скоростей у полушара: v → 0,9 R
+    gDyn.innerHTML = '';
+    // полушар
+    const r = P.R * V.sc;
+    el('path', { d: `M${X(M[0]) - r},${Y(0)} A${r},${r} 0 0 1 ${X(M[0]) + r},${Y(0)} Z`, fill: '#ececec', stroke: INK, 'stroke-width': 1.6 }, gDyn);
+    // треугольник OMK и размер x
+    if ($('tri').checked) {
+      el('line', { x1: X(M[0]), y1: Y(0), x2: X(K[0]), y2: Y(K[1]), stroke: GRAY, 'stroke-width': 1, 'stroke-dasharray': '6 4' }, gDyn);
+      // знак прямого угла при K
+      const q = 9, u1 = [c, -s], u2 = [-s, -c];      // вдоль стержня к O и к M (в экранных: y вниз)
+      const kx = X(K[0]), ky = Y(K[1]);
+      const p1 = [kx + q * u1[0], ky - q * u1[1]], p3 = [kx + q * u2[0], ky - q * u2[1]], p2 = [p1[0] + q * u2[0], p1[1] - q * u2[1]];
+      el('path', { d: `M${p1[0]},${p1[1]} L${p2[0]},${p2[1]} L${p3[0]},${p3[1]}`, fill: 'none', stroke: GRAY, 'stroke-width': 1 }, gDyn);
+      const yd = Y(0) + 26;
+      el('line', { x1: X(M[0]), y1: Y(0) + 2, x2: X(M[0]), y2: yd + 6, stroke: GRAY, 'stroke-width': 0.8 }, gDyn);
+      el('line', { x1: X(0), y1: Y(0) + 2, x2: X(0), y2: yd + 6, stroke: GRAY, 'stroke-width': 0.8 }, gDyn);
+      el('line', { x1: X(M[0]) + 8, y1: yd, x2: X(0), y2: yd, stroke: INK, 'stroke-width': 0.75, 'marker-end': 'url(#hk)' }, gDyn);
+      el('line', { x1: X(0) - 8, y1: yd, x2: X(M[0]), y2: yd, stroke: INK, 'stroke-width': 0.75, 'marker-end': 'url(#hk)' }, gDyn);
+      label(gDyn, (X(M[0]) + X(0)) / 2, yd - 6, 'x');
+    }
+    // стержень
+    el('line', { x1: X(0), y1: Y(0), x2: X(E[0]), y2: Y(E[1]), stroke: INK, 'stroke-width': 2.4, 'stroke-linecap': 'round' }, gDyn);
+    // угол α при шарнире
+    const ra = 34;
+    el('path', { d: `M${X(0) - ra},${Y(0)} A${ra},${ra} 0 0 1 ${X(0) - ra * c},${Y(0) - ra * s}`, fill: 'none', stroke: INK, 'stroke-width': 0.8 }, gDyn);
+    label(gDyn, X(0) - (ra + 12) * Math.cos(a / 2), Y(0) - (ra + 12) * Math.sin(a / 2) + 6, 'α');
+    // скорость полушара — у центра M
+    arrow(gDyn, M[0], P.R, P.v * cs, 0, GRAY, 2.4, 'hg');             // у вершины полушара
+    label(gDyn, X(M[0] + P.v * cs / 2), Y(P.R) - 8, 'v', { 'font-size': 16 });
+    // скорости в точке касания
+    if ($('contact').checked) {
+      const vK = [P.v * cs, 0];                          // скорость полушара в K (поступательное движение)
+      const n = [s, c], vn = P.v * s * cs;               // нормаль к стержню наружу от полушара
+      arrow(gDyn, K[0], K[1], vK[0], vK[1], GRAY, 2, 'hg');
+      // проекция конца вектора v на нормаль
+      const tip = [K[0] + vK[0], K[1]], foot = [K[0] + vn * n[0], K[1] + vn * n[1]];
+      el('line', { x1: X(tip[0]), y1: Y(tip[1]), x2: X(foot[0]), y2: Y(foot[1]), stroke: GRAY, 'stroke-width': 1, 'stroke-dasharray': '4 3' }, gDyn);
+      arrow(gDyn, K[0], K[1], k.w * Kd * cs * n[0], k.w * Kd * cs * n[1], BLUE, 2.4, 'hb');
+    }
+    // конец стержня: скорость и ускорение
+    const vdir = [s, c];                                  // перпендикулярно стержню, в сторону роста α
+    const cutV = arrow(gDyn, E[0], E[1], k.v1 * vs * vdir[0], k.v1 * vs * vdir[1], BLUE, 2.4, 'hb', maxL);
+    let cutA = false;
+    if ($('acc').checked) {
+      const at = [k.at * as * vdir[0], k.at * as * vdir[1]], an = [k.an * as * c, -k.an * as * s];
+      const sum = [at[0] + an[0], at[1] + an[1]];
+      cutA = arrow(gDyn, E[0], E[1], at[0], at[1], GRAY, 1.2, 'hg', maxL) || cutA;
+      cutA = arrow(gDyn, E[0], E[1], an[0], an[1], GRAY, 1.2, 'hg', maxL) || cutA;
+      cutA = arrow(gDyn, E[0], E[1], sum[0], sum[1], INK, 1.6, 'hk', maxL) || cutA;
+    }
+    // точки и шарнир поверх всего
+    el('circle', { cx: X(0), cy: Y(0), r: 5, fill: '#fff', stroke: INK, 'stroke-width': 1.4 }, gDyn);
+    for (const p of [K, E, M]) el('circle', { cx: X(p[0]), cy: Y(p[1]), r: 3.6, fill: '#fff', stroke: INK, 'stroke-width': 1.1 }, gDyn);
+    label(gDyn, X(0) + 4, Y(0) - 12, 'O', { 'text-anchor': 'start' });
+    label(gDyn, X(M[0]) - 12, Y(0) - 8, 'M');
+    label(gDyn, X(K[0]) - 18 * c - 14 * s, Y(K[1]) - 18 * s + 14 * c + 5, 'K');
+    // строка состояния
+    let msg = `α = ${fmt(a / DEG, 1)}°, x = ${fmt(x, 3)} м; ω = ${fmt(k.w, 3)} рад/с; конец стержня: v₁ = ${fmt(k.v1, 3)} м/с, a = ${fmt(Math.hypot(k.at, k.an), 3)} м/с².`;
+    if (Math.abs(a - A45) < 0.05 * DEG) msg = 'Остановка при α = 45°, сравните с таблицей ниже. ' + msg;
+    if (cutV || cutA) msg += ' Длинные стрелки укорочены.';
+    if (t >= T - 1e-9) msg = 'α = 80°: дальше угловая скорость быстро стремится к бесконечности. ' + msg;
+    $('status').textContent = msg;
+  }
+
+  function drawStrobe() {
+    gStrobe.innerHTML = '';
+    if (!$('strobe').checked) return;
+    const N = 10, dt = T / N;
+    for (let i = 0; i <= N && i * dt <= t + 1e-9; i++) {
+      const e = endAt(i * dt);
+      el('line', { x1: X(0), y1: Y(0), x2: X(e[0]), y2: Y(e[1]), stroke: '#bbb', 'stroke-width': 1.2, 'stroke-dasharray': '1.5 3' }, gStrobe);
+      el('circle', { cx: X(e[0]), cy: Y(e[1]), r: 2.4, fill: '#bbb' }, gStrobe);
+    }
+  }
+
+  // численная проверка при α = 45°: производные положения конца по времени
+  function fillTable() {
+    const t45 = tAt(A45), h = T * 1e-4;
+    const e0 = endAt(t45 - h), e1 = endAt(t45), e2 = endAt(t45 + h);
+    const vn = Math.hypot((e2[0] - e0[0]) / (2 * h), (e2[1] - e0[1]) / (2 * h));
+    const an = Math.hypot((e2[0] - 2 * e1[0] + e0[0]) / h / h, (e2[1] - 2 * e1[1] + e0[1]) / h / h);
+    const vf = P.v * P.l / (Math.SQRT2 * P.R), af = Math.sqrt(2.5) * P.v ** 2 * P.l / P.R ** 2;
+    $('tb').innerHTML =
+      `<tr><td>скорость <span class="math">v</span><sub>1</sub>, м/с</td><td>${fmt(vn, 4)}</td><td>${fmt(vf, 4)}</td><td><span class="math">vl</span>/(√2·<span class="math">R</span>)</td></tr>` +
+      `<tr><td>ускорение <span class="math">a</span>, м/с²</td><td>${fmt(an, 4)}</td><td>${fmt(af, 4)}</td><td>√(5/2)·<span class="math">v</span>²<span class="math">l</span>/<span class="math">R</span>²</td></tr>`;
+  }
+
+  function reset() {
+    P = readParams(); x0 = P.R / Math.sin(P.a0); T = tAt(AMAX); t = 0; stopped45 = false;
+    playing = false; $('play').textContent = 'Пуск';
+    V = view(); drawStatic(); fillTable(); drawStrobe(); drawDyn(); drawCharts();
+  }
+
+  function frame(ts) {
+    if (last !== null && playing) {
+      const t45 = tAt(A45);
+      let nt = t + Math.min(0.05, (ts - last) / 1000) * rate;
+      if ($('stop45').checked && !stopped45 && t < t45 && nt >= t45) { nt = t45; stopped45 = true; playing = false; $('play').textContent = 'Пуск'; }
+      if (nt >= T) { nt = T; playing = false; $('play').textContent = 'Пуск'; }
+      t = nt; drawStrobe(); drawDyn(); markCharts();
+    }
+    last = ts; requestAnimationFrame(frame);
+  }
+
+  // ---------- графики по углу ----------
+  const charts = [];
+  function chart(svg, mode) {
+    const w = 420, h = 300, m = { l: 46, r: 16, t: 22, b: 40 }, iw = w - m.l - m.r, ih = h - m.t - m.b;
+    const a1 = 10, a2 = 75, Xc = d => m.l + (d - a1) / (a2 - a1) * iw;
+    const ymax = mode === 1 ? 3 : 10, Yc = v => m.t + ih - Math.min(v, ymax * 1.05) / ymax * ih;
+    const series = mode === 1
+      ? [[a => f(a), BLUE, '', 'ωR/v']]
+      : [[a => f(a) * fp(a), INK, '', 'ε'], [a => f(a) ** 2, GRAY, '6 4', 'ω²']];
+    svg.innerHTML = ''; marker(svg, 'ax' + mode, INK);
+    const g = el('g', { 'font-size': 13 }, svg);
+    el('line', { x1: m.l, y1: m.t + ih, x2: w - 4, y2: m.t + ih, stroke: INK, 'stroke-width': 0.75, 'marker-end': `url(#ax${mode})` }, g);
+    el('line', { x1: m.l, y1: m.t + ih, x2: m.l, y2: 4, stroke: INK, 'stroke-width': 0.75, 'marker-end': `url(#ax${mode})` }, g);
+    el('text', { x: w - 4, y: m.t + ih + 32, 'text-anchor': 'end', 'font-style': 'italic', 'font-size': 15 }, g).textContent = 'α';
+    for (const d of [15, 30, 45, 60, 75]) {
+      el('line', { x1: Xc(d), y1: m.t + ih, x2: Xc(d), y2: m.t + ih + 5, stroke: INK, 'stroke-width': 0.6 }, g);
+      el('text', { x: Xc(d), y: m.t + ih + 19, 'text-anchor': 'middle' }, g).textContent = d + '°';
+    }
+    const st = mode === 1 ? 0.5 : 2;
+    for (let v = st; v <= ymax; v += st) {
+      el('line', { x1: m.l - 5, y1: Yc(v), x2: m.l, y2: Yc(v), stroke: INK, 'stroke-width': 0.6 }, g);
+      el('text', { x: m.l - 8, y: Yc(v) + 4, 'text-anchor': 'end' }, g).textContent = fmt(v, st < 1 ? 1 : 0);
+    }
+    // α = 45°: проекции значений на оси
+    for (const [fn] of series) {
+      const y = Yc(fn(A45));
+      el('line', { x1: Xc(45), y1: m.t + ih, x2: Xc(45), y2: y, stroke: GRAY, 'stroke-width': 0.8, 'stroke-dasharray': '4 3' }, g);
+      el('line', { x1: m.l, y1: y, x2: Xc(45), y2: y, stroke: GRAY, 'stroke-width': 0.8, 'stroke-dasharray': '4 3' }, g);
+    }
+    const lab = mode === 1 ? [['1/√2', f(A45)]] : [['3/2', f(A45) * fp(A45)], ['1/2', f(A45) ** 2]];
+    for (const [s, v] of lab) el('text', { x: m.l + 4, y: Yc(v) - 4 }, g).textContent = s;
+    const clipId = 'cp' + mode;
+    el('rect', { x: m.l, y: m.t - 10, width: iw, height: ih + 10 }, el('clipPath', { id: clipId }, el('defs', {}, svg)));
+    const cg = el('g', { 'clip-path': `url(#${clipId})` }, g);
+    for (const [fn, col, dash] of series) {
+      const pts = []; for (let d = a1; d <= a2 + 1e-9; d += 0.5) pts.push(Xc(d).toFixed(1) + ',' + Yc(fn(d * DEG)).toFixed(1));
+      el('polyline', { fill: 'none', stroke: col, 'stroke-width': 2, 'stroke-dasharray': dash, points: pts.join(' ') }, cg);
+    }
+    const cur = el('line', { y1: m.t, y2: m.t + ih, stroke: BLUE, 'stroke-width': 1 }, g);
+    const hv = el('g', {}, g);
+    charts[mode] = { cur, Xc };
+    svg.onpointermove = e => {
+      const b = svg.getBoundingClientRect(), px = (e.clientX - b.left) / b.width * w;
+      const d = Math.min(a2, Math.max(a1, a1 + (px - m.l) / iw * (a2 - a1))), a = d * DEG;
+      hv.innerHTML = '';
+      el('line', { x1: Xc(d), x2: Xc(d), y1: m.t, y2: m.t + ih, stroke: GRAY, 'stroke-width': 0.75 }, hv);
+      for (const [fn, col] of series) el('circle', { cx: Xc(d), cy: Yc(fn(a)), r: 3.6, fill: '#fff', stroke: col, 'stroke-width': 1.4 }, hv);
+      $('hover').innerHTML = `<span class="math">α</span> = ${fmt(d, 1)}°: <span class="math">ωR</span>/<span class="math">v</span> = ${fmt(f(a), 3)}; ` +
+        `<span class="math">εR</span>²/<span class="math">v</span>² = ${fmt(f(a) * fp(a), 3)}; <span class="math">ω</span>²<span class="math">R</span>²/<span class="math">v</span>² = ${fmt(f(a) ** 2, 3)}`;
+    };
+    svg.onpointerleave = () => { hv.innerHTML = ''; };
+  }
+  function markCharts() {
+    const d = alphaAt(t) / DEG;
+    for (const c of charts) if (c) { c.cur.setAttribute('x1', c.Xc(d)); c.cur.setAttribute('x2', c.Xc(d)); }
+  }
+  function drawCharts() { chart($('c1'), 1); chart($('c2'), 2); markCharts(); }
+
+  // ---------- управление ----------
+  $('play').onclick = () => {
+    if (t >= T - 1e-9) { t = 0; stopped45 = false; }
+    playing = !playing; $('play').textContent = playing ? 'Пауза' : 'Пуск';
+  };
+  $('restart').onclick = reset;
+  $('to45').onclick = () => { t = tAt(A45); stopped45 = true; playing = false; $('play').textContent = 'Пуск'; drawStrobe(); drawDyn(); markCharts(); };
+  $('speed').oninput = e => { rate = +e.target.value; $('speedv').textContent = '×' + fmt(rate, 2).replace(/,?0+$/, ''); };
+  for (const id of ['v', 'R', 'l']) $(id).oninput = reset;
+  for (const id of ['contact', 'tri', 'acc']) $(id).onchange = drawDyn;
+  $('strobe').onchange = drawStrobe;
+
+  reset();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
