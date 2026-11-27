@@ -196,6 +196,7 @@
   // ---------- модель ----------
   // Начало координат — центр масс O. Тело 1: r, скорость u. Тело 2 всегда в точке −r со скоростью −u.
   // Между рывками прямая линия; момент рывка из |r + u s| = l (аналитически).
+  const PU = [0.14, 0.33, 0.5, 0.69, 0.86], PH = [0.55, -0.9, 0.3, -0.75, 0.45];   // узор нити
   const KV = 60;                                // единый масштаб скоростей: пикселей на 1 м/с
   let P, S, playing = false, rate = 1, last = null, shownNj = -1;
 
@@ -270,21 +271,29 @@
       pl(S.v1.map(p => [-p[0], -p[1]]).concat([[-r[0], -r[1]]]), GRAY, 1);
       pl(S.v1.concat([r]), INK, 1);
     }
-    // нить: при d = 2l прямая; иначе дуга окружности длиной ровно 2l (sin α / α = d / 2l)
-    const d = 2 * Math.hypot(r[0], r[1]), L2 = 2 * P.l, q = d / L2;
-    let al = 0;
-    if (q < 1 - 1e-9) { let lo = 1e-6, hi = Math.PI - 1e-6; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; (Math.sin(m) / m > q ? lo = m : hi = m); } al = (lo + hi) / 2; }
-    const dpx = d * sc, ex = (B[0] - A[0]) / dpx, ey = (B[1] - A[1]) / dpx, nx = -ey, ny = ex;
-    const pts = [], Rr = al > 0 ? dpx / (2 * Math.sin(al)) : 0;
-    const h = al > 0 ? Rr * (1 - Math.cos(al)) : 0;
-    for (let i = 0; i <= 60; i++) {
-      let px, py;
-      if (al > 0) { const ph = al * (2 * i / 60 - 1), x = Rr * Math.sin(ph), w = Rr * (Math.cos(ph) - Math.cos(al));
-        px = (A[0] + B[0]) / 2 + ex * x + nx * w; py = (A[1] + B[1]) / 2 + ey * x + ny * w; }
-      else { px = A[0] + (B[0] - A[0]) * i / 60; py = A[1] + (B[1] - A[1]) * i / 60; }
-      pts.push(px.toFixed(2) + ',' + py.toFixed(2));
-    }
-    el('polyline', { points: pts.join(' '), fill: 'none', stroke: INK, 'stroke-width': h < 1.5 ? 2 : 1.2, 'stroke-linejoin': 'round' }, gDyn);
+    // нить: фиксированный «узор» ломаной, общий множитель k подбирается так, чтобы длина кривой была ровно 2l
+    const d = 2 * Math.hypot(r[0], r[1]), L2 = 2 * RP, dpx = d * sc;
+    const ex = (B[0] - A[0]) / dpx, ey = (B[1] - A[1]) / dpx, nx = -ey, ny = ex;
+    const geom = k => {
+      const V = [A];
+      for (let i = 0; i < PU.length; i++) V.push([A[0] + ex * PU[i] * dpx + nx * PH[i] * k, A[1] + ey * PU[i] * dpx + ny * PH[i] * k]);
+      V.push(B);
+      let len = 0, path = `M${A[0].toFixed(2)},${A[1].toFixed(2)}`, cur = A;
+      const seg = (p, q) => Math.hypot(q[0] - p[0], q[1] - p[1]);
+      for (let i = 1; i < V.length - 1; i++) {
+        const p = V[i - 1], c = V[i], q = V[i + 1], l1 = seg(p, c), l2 = seg(c, q), rr = Math.min(0.3 * l1, 0.3 * l2, 24);
+        const pi = [c[0] + (p[0] - c[0]) * rr / l1, c[1] + (p[1] - c[1]) * rr / l1], po = [c[0] + (q[0] - c[0]) * rr / l2, c[1] + (q[1] - c[1]) * rr / l2];
+        len += seg(cur, pi); path += ` L${pi[0].toFixed(2)},${pi[1].toFixed(2)} Q${c[0].toFixed(2)},${c[1].toFixed(2)} ${po[0].toFixed(2)},${po[1].toFixed(2)}`;
+        let prev = pi;
+        for (let j = 1; j <= 8; j++) { const t = j / 8, m = 1 - t, x = m * m * pi[0] + 2 * m * t * c[0] + t * t * po[0], y = m * m * pi[1] + 2 * m * t * c[1] + t * t * po[1]; len += Math.hypot(x - prev[0], y - prev[1]); prev = [x, y]; }
+        cur = po;
+      }
+      len += seg(cur, B); path += ` L${B[0].toFixed(2)},${B[1].toFixed(2)}`;
+      return { len, path };
+    };
+    let k = 0;
+    if (dpx < L2 - 1e-6) { let lo = 0, hi = 4 * L2; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; (geom(m).len < L2 ? lo = m : hi = m); } k = (lo + hi) / 2; }
+    el('path', { d: geom(k).path, fill: 'none', stroke: INK, 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, gDyn);
     // скорости (один масштаб KV)
     if ($('vel').checked) {
       for (const [p, w] of [[A, 1], [B, -1]]) {
