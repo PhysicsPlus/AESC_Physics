@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Надо уметь выводить — Электростатика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#ffffff;
+    --bg:#ece6da;
+    --ink:#13161c;
+    --ink-soft:#3a3f48;
+    --pencil:#7d756a;
+    --blue:#1d4f8a;
+    --blue-deep:#0e3163;
+    --blue-soft:#dde7f3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Lora','Georgia',serif;font-weight:400;
+    -webkit-text-size-adjust:100%;
+  }
+
+  /* ===== reading column ===== */
+  .stack{
+    max-width:640px;
+    margin:0 auto;
+    padding:18px 14px 60px;
+    display:flex; flex-direction:column;
+    gap:22px;
+  }
+
+  /* ===== header banner ===== */
+  header.head{
+    padding:18px 4px 14px;
+    border-bottom:1.2px solid var(--ink);
+    margin-bottom:4px;
+  }
+  header.head .kicker{
+    display:block;
+    font-size:12px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--blue-deep); font-weight:600;
+    margin-bottom:6px;
+  }
+  header.head h1{
+    font-family:'Lora',serif; font-style:italic; font-weight:600;
+    font-size:28px; line-height:1.15;
+    margin:0 0 8px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  header.head h1 .hl{
+    background:linear-gradient(transparent 60%, var(--blue-soft) 60% 92%, transparent 92%);
+    padding:0 8px;
+  }
+  header.head .r{
+    font-style:italic; font-size:15px; color:var(--ink-soft);
+  }
+
+  /* ===== card ===== */
+  .item{
+    background:var(--paper);
+    border:1.8px solid var(--blue-deep);
+    border-radius:14px;
+    padding:30px 18px 22px;
+    position:relative;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);
+  }
+  .item .num{
+    position:absolute;
+    top:12px; left:12px;
+    width:42px; height:42px; border-radius:50%;
+    background:var(--blue);
+    color:#fff;
+    font-family:'Lora',serif;
+    font-weight:600; font-style:italic;
+    font-size:24px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1px 0 rgba(0,0,0,.10);
+    transform:rotate(-3deg);
+    border:1.5px solid var(--blue-deep);
+    z-index:1;
+  }
+
+  .head-row{
+    margin: 6px 0 14px;
+    padding-left:54px; /* room for the circle */
+    min-height:42px;
+    display:flex; flex-direction:column; justify-content:center;
+    gap:4px;
+  }
+  .item h3{
+    font-family:'Lora',serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0;
+    color:var(--blue-deep);
+    line-height:1.2;
+    text-wrap:balance;
+  }
+  .item .lede{
+    font-size:15px;color:var(--ink-soft);
+    margin:0; line-height:1.35;
+    font-style:italic;
+  }
+
+  /* ===== body: comment then formulas, stacked ===== */
+  .body{
+    display:flex; flex-direction:column;
+    gap:16px;
+  }
+
+  /* comment */
+  .derive{
+    padding:4px 2px 0;
+    font-size:16px; line-height:1.55;
+    color:var(--ink);
+    text-wrap:pretty;
+  }
+  .derive .tag{
+    display:block;
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    font-weight:700; color:var(--blue);
+    margin-bottom:6px;
+  }
+  .derive b{ color:var(--ink); font-weight:700; }
+  .derive em{ color:var(--blue-deep); font-style:italic; }
+  .derive .arrow{ color:var(--blue); font-weight:700; }
+  .derive p{ margin:0 0 8px; }
+  .derive p:last-child{ margin-bottom:0 }
+
+  /* formulas — labels above each equation */
+  .formulas{
+    display:flex; flex-direction:column;
+    gap:14px;
+    padding:4px 2px 12px;
+    border-bottom:1px dashed rgba(29,79,138,.30);
+  }
+  .formulas .formulas-tag{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    font-weight:700; color:var(--blue);
+    margin-bottom:-4px;
+  }
+  .formulas .row{
+    display:flex; flex-direction:column;
+    gap:4px;
+    width:100%;
+    min-width:0;
+  }
+  .formulas .lbl{
+    font-style:italic; color:var(--blue);
+    font-size:14px;
+    line-height:1.3;
+  }
+  .formulas .eq{
+    width:100%;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 4px 4px;
+    scrollbar-width:thin;
+    font-size:17px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .formulas .eq::-webkit-scrollbar{ height:4px }
+  .formulas .eq::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.18); border-radius:3px }
+
+  mjx-container[jax="CHTML"][display="true"]{ margin: .15em 0 !important; }
+  mjx-container{ font-size:1em; }
+
+  footer.foot{
+    margin-top:8px;
+    padding:12px 6px 0;
+    border-top:1px solid rgba(20,20,20,.12);
+    font-size:13px;color:var(--pencil);
+    font-style:italic;
+    text-align:center;
+  }
+
+  /* ===== bigger screens: keep the column comfy, allow wider formulas ===== */
+  @media (min-width: 760px){
+    .stack{ max-width:780px; padding:32px 24px 80px; gap:28px; }
+    header.head h1{ font-size:34px; }
+    .item{ padding:34px 28px 26px; }
+    .item .num{ width:50px; height:50px; font-size:28px; top:14px; left:14px; }
+    .head-row{ padding-left:64px; min-height:50px; }
+    .item h3{ font-size:26px; }
+    .item .lede{ font-size:17px; }
+    .derive{ font-size:18px; padding:4px 2px 0; }
+    .formulas .eq{ font-size:19px; }
+    .formulas .lbl{ font-size:15px; }
+  }
+</style>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath:  [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      packages: {'[+]': ['ams']},
+      macros: {
+        vc:  ['\\vec{#1}', 1],
+        eps: '\\varepsilon',
+        Ez:  '\\varepsilon_0',
+        Eb:  'E_0',
+        tg:  '\\operatorname{tg}',
+        ctg: '\\operatorname{ctg}',
+        dd:  '\\mathrm{d}',
+        vb:  ['\\mathbf{#1}', 1],
+        qty: ['\\!\\left(#1\\right)', 1],
+        dv:  ['\\frac{\\mathrm{d}#1}{\\mathrm{d}#2}', 2],
+        pdv: ['\\frac{\\partial #1}{\\partial #2}', 2],
+        grad:'\\boldsymbol{\\nabla}',
+        divg:'\\boldsymbol{\\nabla}\\!\\cdot',
+        curl:'\\boldsymbol{\\nabla}\\!\\times'
+      }
+    },
+    chtml: { scale: 1.0, displayAlign: 'left', mtextInheritFont: true },
+    svg:   { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<div class="stack">
+
+  <header class="head" data-screen-label="00 Шапка">
+    <span class="kicker">Надо уметь выводить</span>
+    <h1><span class="hl">Электростатика</span> и электрический ток</h1>
+    <div class="r">СУНЦ МГУ · Весна 2026 · П. А. Крюков</div>
+  </header>
+
+  <!-- ============================================================ 1 ============================================================ -->
+  <article class="item" data-screen-label="01 Поле отрезка, нити и полосы">
+    <span class="num">1</span>
+    <div class="head-row">
+      <h3>Поле заряженного отрезка, нити и полосы</h3>
+      <span class="lede">— через углы видимости из точки наблюдения</span>
+    </div>
+    <div class="body">
+      <div class="formulas">
+        <span class="formulas-tag">Формулы</span>
+        <div class="row"><span class="lbl">отрезок, ⟂ к нему:</span><span class="eq">$\displaystyle E_\perp = \frac{\lambda}{4\pi\Ez\,h}\bigl(\sin\alpha_2-\sin\alpha_1\bigr)$</span></div>
+        <div class="row"><span class="lbl">бесконечная нить:</span><span class="eq">$\displaystyle E(r) = \frac{\lambda}{2\pi\Ez\,r}$</span></div>
+        <div class="row"><span class="lbl">полоса, ⟂:</span><span class="eq">$\displaystyle E_n = \frac{\sigma(\beta_2-\beta_1)}{2\pi\Ez}$</span></div>
+        <div class="row"><span class="lbl">полоса, ‖:</span><span class="eq">$\displaystyle E_\tau = \frac{\sigma}{2\pi\Ez}\,\ln\frac{\cos\beta_1}{\cos\beta_2}$</span></div>
+      </div>
+      <div class="derive">
+        <span class="tag">Комментарий</span>
+        <p>Стандартный подход: разбиваем источник (отрезок) на бесконечно малые элементы $\dd q=\lambda\,\dd x$ и считаем вклад каждого: $\dd E_{\perp}=\frac{\lambda\,\dd x}{4\pi\Ez r^2}\cdot \frac{h}{r}$. Поскольку $r^{2} = x^{2}+h^{2}$, прямое интегрирование по $x$ формально возможно, но приводит к громоздким алгебраическим выражениям.</p>
+        <p>Для упрощения интегрирования целесообразно перейти от координаты $x$ к угловой переменной $\alpha$ - углу между перпендикуляром $h$ и радиус-вектором $\vc r$ элемента $\dd x$. Из геометрии следует: $x=h\tg\alpha$, откуда $\dd x=h\frac{\dd\alpha}{\cos^2\alpha}$ и $r=\frac{h}{\cos\alpha}$. Подстановка в выражение для нормальной компоненты $\dd E_\perp = \frac{\lambda\,\dd x}{4\pi\Ez r^2}\cos\alpha$ приводит к сокращению тригонометрических множителей: $\dd E_\perp = \frac{\lambda}{4\pi\Ez h}\cos\alpha\,\dd\alpha$. Интегрирование становится элементарным. Дальше всё определяется только <em>пределами по углу</em>. Для <em>отрезка</em> $\alpha\in[\alpha_1,\alpha_2]$ — это углы на концы из точки наблюдения. Для <em>бесконечной нити</em> $\alpha\in[-\pi/2,\pi/2]$, и $\sin\alpha_2-\sin\alpha_1=2$ <span class="arrow">→</span> отсюда «двойка» в знаменателе формулы $E=\frac{\lambda}{2\pi\Ez r}$.</p>
+        <p><em>Полосу</em> ширины $b$ разобьём на бесконечно узкие параллельные нити с линейной плотностью $\dd\lambda = \sigma\,\dd y$. Поле каждой нити уже известно: $\dd E = \frac{\dd\lambda}{2\pi\Ez r}$. Вводя угол $\beta$ между перпендикуляром к полосе и направлением на нить ($y = h\tg\beta$, $\dd y = h\frac{\dd\beta}{\cos^2\beta}$, $r = \frac{h}{\cos\beta}$), получаем вклады в две компоненты: нормальная $\dd E_n \propto \dd\beta$ интегрируется в линейную разность углов $(\beta_2-\beta_1)$, а тангенциальная $\dd E_\tau \propto \tg\beta\,\dd\beta$ даёт логарифм $\ln\frac{\cos\beta_1}{\cos\beta_2}$.</p>
+      </div>
+    </div>
+  </article>
+
+
+  <!-- ============================================================ 2 ============================================================ -->
+  <article class="item" data-screen-label="02 Поле площадки, диска. Сила на полусферу">
+    <span class="num">2</span>
+    <div class="head-row">
+      <h3>Поле площадки и диска. Сила на полусферу</h3>
+      <span class="lede">— через телесный угол $\Omega$, под которым видна поверхность</span>
+    </div>
+    <div class="body">
+      <div class="formulas">
+        <span class="formulas-tag">Формулы</span>
+        <div class="row"><span class="lbl">площадка:</span><span class="eq">$\displaystyle E_n = \frac{\sigma}{4\pi\Ez}\,\Omega$</span></div>
+        <div class="row"><span class="lbl">диск, по оси:</span><span class="eq">$\displaystyle E(x) = \frac{\sigma}{2\Ez}\!\left(1-\frac{x}{\sqrt{x^2+R^2}}\right)$</span></div>
+        <div class="row"><span class="lbl">эл. сила:</span><span class="eq">$\displaystyle \dd F_n = \sigma\,\dd\Phi$</span></div>
+        <div class="row"><span class="lbl">центр. $q$ + полусфера:</span><span class="eq">$\displaystyle F = q\,E_{\text{псф}} = \frac{q\,\sigma}{4\Ez}$</span></div>
+      </div>
+      <div class="derive">
+        <span class="tag">Комментарий</span>
+        <p>Опорный факт: вклад малой площадки $\dd S$ заряженной поверхности в нормальную к ней компоненту поля в точке наблюдения равен $\dd E_n = \frac{\sigma\,\dd\Omega}{4\pi\Ez}$, где $\dd\Omega = \frac{\dd S\cos\theta}{r^2}$ — <b>телесный угол</b>, под которым эта площадка видна. Замечательно, что от расстояния $r$ зависимость <em>исчезает</em> — остаётся одна геометрия: «насколько большой выглядит источник».</p>
+        <p>Для <em>диска радиуса $R$</em>, рассматриваемого с точки на его оси на расстоянии $x$, полный телесный угол равен $\Omega = 2\pi\,\qty(1-\cos\theta_R)$, где $\theta_R$ — половинный угол раствора конуса. Подставив $\cos\theta_R=\frac{x}{\sqrt{x^2+R^2}}$ из прямоугольного треугольника, сразу получаем компактную формулу для $E(x)$ — <b>без явного интегрирования по кольцам</b>. В пределе $R\to\infty$ получаем бесконечную плоскость $E=\frac{\sigma}{2\Ez}$ (как и должно быть).</p>
+        <p>Этот же приём даёт изящный вывод силы, действующей на <em>заряженную полусферу</em> со стороны точечного заряда $q$, помещённого в её центр. Применяем «двойственность»: $\dd F_n = \sigma\,\dd S\cdot E_q = \sigma\,\dd\Phi$, где $\dd\Phi$ — поток поля заряда $q$ через площадку $\dd S$. Полный поток через полусферу равен <em>половине</em> от полного потока $\frac{q}{\Ez}$, то есть $\frac{q}{2\Ez}$. Отсюда $F=\frac{q\sigma}{4\Ez}$ — и ответ <b>не зависит от радиуса</b> полусферы. Это та же логика, что и в теореме Гаусса, только применённая «наоборот».</p>
+      </div>
+    </div>
+  </article>
+
+
+  <!-- ============================================================ 3 ============================================================ -->
+  <article class="item" data-screen-label="03 Теорема Гаусса. Пластина и шар">
+    <span class="num">3</span>
+    <div class="head-row">
+      <h3>Теорема Гаусса. Поле пластины и шара</h3>
+      <span class="lede">— дифференциальная форма; объёмно заряженные тела</span>
+    </div>
+    <div class="body">
+      <div class="formulas">
+        <span class="formulas-tag">Формулы</span>
+        <div class="row"><span class="lbl">дифф. форма:</span><span class="eq">$\displaystyle \divg \vc{E} = \pdv{E_x}{x}+\pdv{E_y}{y}+\pdv{E_z}{z} = \frac{\rho(\vc{r})}{\Ez}$</span></div>
+        <div class="row"><span class="lbl">пластина $2d$:</span><span class="eq">$\displaystyle E_x(x) = \begin{cases}\frac{\rho\,x}{\Ez},& |x|\lt d\\[4pt] \frac{\rho\,d}{\Ez}\,\operatorname{sgn}(x),& |x|\geqslant d\end{cases}$</span></div>
+        <div class="row"><span class="lbl">шар радиуса $R$:</span><span class="eq">$\displaystyle \vc{E}(\vc r) = \begin{cases}\frac{\rho}{3\Ez}\,\vc r,& r\lt R\\[6pt] \frac{\rho R^3}{3\Ez\,r^3}\,\vc r,& r\geqslant R\end{cases}$</span></div>
+      </div>
+      <div class="derive">
+        <span class="tag">Комментарий</span>
+        <p>Исходим из интегральной формы $\oint\vc E\!\cdot\dd\vc S = \frac{Q_{\text{вн}}}{\Ez}$: поток электрического поля через замкнутую поверхность равен заключённому внутри заряду, делённому на $\Ez$. От неё переходим к <b>дифференциальной форме</b> предельным сжатием объёма в точку: применяем теорему о дивергенции $\oint\vc E\!\cdot\dd\vc S = \int\divg\vc E\,\dd V$ и получаем <em>локальный</em> закон — он связывает плотность заряда и поле в одной и той же точке, без какой-либо «удалённой» поверхности.</p>
+        <p>Практическая сила теоремы Гаусса — в задачах с <b>симметрией</b>, где из соображений симметрии заранее известно, в какую сторону направлено $\vc E$ и от чего оно зависит. Тогда поверхность выбирается «под симметрию», и интеграл $\oint\vc E\!\cdot\dd\vc S$ превращается в произведение $E\cdot S$.</p>
+        <p><em>Плоская пластина</em> толщины $2d$, заряженная объёмно с плотностью $\rho$: берём «таблетку» площадью $S$, расположенную симметрично относительно середины. На боковой поверхности $\vc E\parallel$ поверхности — потока нет. На двух торцах поток одинаков. Внутри пластины захвачено $Q_{\text{вн}}=\rho\cdot S\cdot 2x$ <span class="arrow">→</span> $2ES=\frac{2\rho x S}{\Ez}$ <span class="arrow">→</span> <b>линейный рост</b>. Снаружи $Q_{\text{вн}}$ уже не растёт <span class="arrow">→</span> поле постоянно и равно $\frac{\rho d}{\Ez}$.</p>
+        <p><em>Однородно заряженный шар</em> радиуса $R$: гауссова поверхность --- сфера радиуса $r$, концентрическая с шаром. Из сферической симметрии $\vc E=E(r)\hat{\vc r}$. Внутри захвачено $Q(r)=\rho\cdot\frac{4}{3}\pi r^3$ <span class="arrow">→</span> $4\pi r^2 E = \frac{Q(r)}{\Ez}$ <span class="arrow">→</span> поле растёт <em>линейно</em> по радиусу, $\vc E\propto\vc r$. Снаружи весь заряд уже внутри сферы — поле тождественно совпадает с полем точечного заряда $Q$, помещённого в центр. Это частный случай общего правила: <b>сферически-симметричное распределение действует снаружи как точка</b>.</p>
+      </div>
+    </div>
+  </article>
+
+
+  <!-- ============================================================ 4 ============================================================ -->
+  <article class="item" data-screen-label="04 Потенциал точечного заряда и шара">
+    <span class="num">4</span>
+    <div class="head-row">
+      <h3>Потенциал точечного заряда и шара</h3>
+      <span class="lede">— снаружи кулоновский, внутри однородного шара — парабола</span>
+    </div>
+    <div class="body">
+      <div class="formulas">
+        <span class="formulas-tag">Формулы</span>
+        <div class="row"><span class="lbl">точечный заряд:</span><span class="eq">$\displaystyle \varphi(r) = \int_r^{\infty}\!\frac{Q\,\dd r'}{4\pi\Ez\,r'^{\,2}} = \frac{Q}{4\pi\Ez\,r}$</span></div>
+        <div class="row"><span class="lbl">однородный шар:</span><span class="eq">$\displaystyle \varphi(r) = \begin{cases}\frac{\rho R^2}{2\Ez}-\frac{\rho r^2}{6\Ez},& r\lt R\\[6pt] \frac{\rho R^3}{3\Ez\,r},& r\geqslant R\end{cases}$</span></div>
+      </div>
+      <div class="derive">
+        <span class="tag">Комментарий</span>
+        <p>Стандартное соглашение: потенциал на бесконечности равен нулю. Тогда $\varphi(r) = \displaystyle\int_r^{\infty}\!E(r')\,\dd r'$ — это <b>работа поля</b> по перемещению единичного положительного заряда из точки $r$ на бесконечность. Поле электростатики потенциально, поэтому путь интегрирования не важен — выбираем самый удобный, обычно радиальный.</p>
+        <p>Для <em>точечного заряда</em> $E=\frac{Q}{4\pi\Ez r^2}$; первообразная от $\frac{1}{r'^{\,2}}$ равна $-\frac{1}{r'}$, что после подстановки пределов сразу даёт классическую кулоновскую формулу $\varphi=\frac{Q}{4\pi\Ez r}$.</p>
+        <p>Для <em>точки внутри однородно заряженного шара</em> ключевая тонкость в том, что <b>выражение для $E$ меняется</b> при пересечении границы $r=R$: внутри $E\propto r$, снаружи $E\propto \frac{1}{r^2}$. Поэтому интеграл нужно <em>разбить на две части</em>: $\displaystyle\int_r^{R}\!E_{\text{внутр}}(r')\,\dd r' + \int_R^{\infty}\!E_{\text{снаружи}}(r')\,\dd r'$. Первая часть даёт <em>параболический</em> вклад $\propto r^2$ (с минусом — поле направлено наружу, и при движении к бесконечности проходим участок «по полю»), вторая — <em>гиперболический</em> $\propto \frac{1}{r}$.</p>
+        <p>Стыковка двух кусков в точке $r=R$ автоматически даёт непрерывность и потенциала, и его производной (поля). В центре шара $\varphi$ принимает <b>максимальное</b> значение $\frac{\rho R^2}{2\Ez}$ — это «потолок» параболы, та работа, которую совершит поле, выталкивая единичный заряд из центра наружу.</p>
+      </div>
+    </div>
+  </article>
+
+
+  <footer class="foot">
+    комментарии · «надо уметь выводить» · электростатика и электрический ток
+  </footer>
+
+</div>
+
+</body>
+</html>
